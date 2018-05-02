@@ -1,4 +1,4 @@
-package com.example.asahi4azu.tournament;
+package com.example.asahi4azu;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
