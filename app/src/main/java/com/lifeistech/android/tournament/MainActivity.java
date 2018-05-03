@@ -1,4 +1,4 @@
-package com.example.asahi4azu.tournament;
+package com.lifeistech.android.tournament;
 
 import android.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;

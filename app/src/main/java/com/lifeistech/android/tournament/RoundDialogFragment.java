@@ -1,4 +1,4 @@
-package com.example.asahi4azu.tournament;
+package com.lifeistech.android.tournament;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

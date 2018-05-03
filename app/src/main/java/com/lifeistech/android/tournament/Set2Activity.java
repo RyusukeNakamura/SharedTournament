@@ -1,13 +1,13 @@
-package com.example.asahi4azu.tournament;
+package com.lifeistech.android.tournament;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class Set1Activity extends AppCompatActivity {
+public class Set2Activity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set1);
+        setContentView(R.layout.activity_set2);
     }
 }

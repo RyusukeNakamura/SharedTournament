@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "372132364146",
+    "firebase_url": "https://tournament-ed000.firebaseio.com",
+    "project_id": "tournament-ed000",
+    "storage_bucket": "tournament-ed000.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:372132364146:android:b53c498cb8882815",
+        "android_client_info": {
+          "package_name": "com.lifeistech.android.tournament"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "372132364146-20at78g8opfaosjatai2t1egd5tsanc5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjw-oWj6iQSppk-DkDM0FXf8BTwwHhF5k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
