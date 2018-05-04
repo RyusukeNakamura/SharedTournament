@@ -17,7 +17,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     ImageView[] imageR1, imageR2;
-    ImageView imageR3, winner;
+    ImageView imageR3, firstWinner;
     GridLayout gridLayout;
     TextView[] textView;
 
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         imageR2[1] = (ImageView) findViewById(R.id.r2w34);
 
         imageR3 = (ImageView) findViewById(R.id.r3w12);
-        winner = (ImageView) findViewById(R.id.winner);
+        firstWinner = (ImageView) findViewById(R.id.firstWinner);
 
 
     }

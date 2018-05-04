@@ -12,9 +12,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.w3c.dom.Text;
 
 public class RoundDialogFragment extends DialogFragment {
+
+    FirebaseDatabase database=FirebaseDatabase.getInstance();
+    DatabaseReference refMsg=database.getReference("message");//messageでいいのか？？
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
