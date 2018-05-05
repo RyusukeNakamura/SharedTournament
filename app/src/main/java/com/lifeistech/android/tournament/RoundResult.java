@@ -3,16 +3,16 @@ package com.lifeistech.android.tournament;
 public class RoundResult {
     String winner;
     String loser;
-    String score;
+    int point;
 
     public RoundResult() {
 
     }
 
-    public RoundResult(String winner, String loser, String score) {
+    public RoundResult(String winner, String loser, int point) {
         this.winner = winner;
         this.loser = loser;
-        this.score = score;
+        this.point=point;
     }
 
     public void setWinner(String winner) {
@@ -23,8 +23,8 @@ public class RoundResult {
         this.loser = loser;
     }
 
-    public void setScore(String score) {
-        this.score = score;
+    public void setScore(int point) {
+        this.point = point;
     }
 
     public String getWinner() {
@@ -35,7 +35,7 @@ public class RoundResult {
         return loser;
     }
 
-    public String getScore() {
-        return score;
+    public int getPoint() {
+        return point;
     }
 }

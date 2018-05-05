@@ -19,6 +19,7 @@
             android:id="@+id/upScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:hint="0"/>
     </LinearLayout>
 
@@ -37,6 +38,7 @@
             android:id="@+id/downScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:hint="0" />
     </LinearLayout>
 

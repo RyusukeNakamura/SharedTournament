@@ -13,9 +13,16 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference refMsg = database.getReference("result");
+
     ImageView[] imageR1, imageR2;
     ImageView imageR3, firstWinner;
     GridLayout gridLayout;
@@ -23,11 +30,13 @@ public class MainActivity extends AppCompatActivity {
 
     String[] players;
 
+    int[][] point;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         players = new String[8];
         Random r = new Random();
@@ -76,11 +85,12 @@ public class MainActivity extends AppCompatActivity {
         DialogFragment dialog = new RoundDialogFragment();
 
         Bundle args = new Bundle();
-        for(int i=0;i<players.length;i++){
-            if(v==imageR1[i]){
-                args.putString("upPlayer", textView[2*i].getText().toString());
-                    args.putString("downPlayer",textView[2*i+1].getText().toString());
-                    break;
+        for (int i = 0; i < players.length; i++) {
+            if (v == imageR1[i]) {
+                args.putInt("id",i);
+                args.putString("upPlayer", textView[2 * i].getText().toString());
+                args.putString("downPlayer", textView[2 * i + 1].getText().toString());
+                break;
             }
         }
         dialog.setArguments(args);
