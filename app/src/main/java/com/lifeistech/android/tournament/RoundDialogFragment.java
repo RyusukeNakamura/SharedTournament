@@ -13,20 +13,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
 public class RoundDialogFragment extends DialogFragment {
 
+
     //firebase 宣言
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference refMsg = database.getReference("result");//messageでいいのか？？
 
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
 
         //カスタムダイアログのViewを取得
         View layout = LayoutInflater.from(getActivity())
@@ -38,6 +42,22 @@ public class RoundDialogFragment extends DialogFragment {
 
         final EditText upScore = (EditText) layout.findViewById(R.id.upScore);
         final EditText downScore = (EditText) layout.findViewById(R.id.downScore);
+
+        int id = getArguments().getInt("id");
+        DatabaseReference refMsg = database.getReference("result" + id);
+
+        database.getReference("result" + id);
+        refMsg.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
         //ダイアログを生成
@@ -51,25 +71,44 @@ public class RoundDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.d("Clicked", "OK");
-                        try{
+                        try {
+                            //2スコア
                             int uScore = Integer.parseInt(upScore.getText().toString());
                             int dScore = Integer.parseInt(downScore.getText().toString());
+                            //クリックしたブロックid
+                            int id = getArguments().getInt("id");
 
+                            //2選手名
+                            String uu=upPlayer.getText().toString();
+                            String dd=downPlayer.getText().toString();
+
+                            DatabaseReference refMsg = database.getReference("result" + 2 * id);
+                            DatabaseReference refMsg2 = database.getReference("result" + (2 * id + 1));
+                            DatabaseReference refRound=database.getReference("Round1");
+
+                            //2選手のスコアを格納
+                            PlayersStatus psu = new PlayersStatus(uu, uScore, 0, 0);
+                            refMsg.setValue(psu);
+                            PlayersStatus psd = new PlayersStatus(dd, dScore, 0, 0);
+                            refMsg2.setValue(psd);
+
+                            //試合を記録
                             if (uScore > dScore) {
-                                Toast.makeText(getActivity(), upPlayer.getText().toString() + " win", Toast.LENGTH_LONG).show();
-                                Log.d("idBango",""+getArguments().getInt("id"));
-                              //  new MainActivity().imageR1[getArguments().getInt("id")].setImageResource(R.drawable.ko_top_won);
+                                Toast.makeText(getActivity(), uu + " won", Toast.LENGTH_LONG).show();
+                                RoundResult R=new RoundResult(uScore,dScore,uu,dd);
+                                refRound.setValue(R);
+
 
                             } else if (uScore < dScore) {
-                                Toast.makeText(getActivity(), downPlayer.getText().toString() + " win", Toast.LENGTH_LONG).show();
-                                new MainActivity().imageR1[getArguments().getInt("id")].setImageResource(R.drawable.ko_bottom_won);
+                                Toast.makeText(getActivity(), dd + " won", Toast.LENGTH_LONG).show();
+                                RoundResult R=new RoundResult(uScore,dScore,dd,uu);
+                                refRound.setValue(R);
+
                             } else {
                                 Toast.makeText(getActivity(), "勝敗を決めてください", Toast.LENGTH_LONG).show();
                             }
-                        }catch(Exception e){
-                            Log.d("error","occured");
-                        }finally {
-                            Log.d("finally","do");
+                        } catch (Exception e) {
+                            Log.d("error", "occured");
                         }
                     }
                 })
