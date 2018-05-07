@@ -9,12 +9,14 @@ public class RoundResult {
     int down;
     String winner;
     String loser;
+    String memo;
 
-    public RoundResult(int up, int down, String winner, String loser) {
+    public RoundResult(int up, int down, String winner, String loser, String memo) {
         this.loser = loser;
         this.winner = winner;
         this.down = down;
         this.up = up;
+        this.memo = memo;
     }
 
     public void setUp(int up) {
@@ -31,6 +33,14 @@ public class RoundResult {
 
     public int getDown() {
         return down;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    public String getMemo() {
+        return memo;
     }
 
     public void setWinner(String winner) {
