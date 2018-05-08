@@ -25,12 +25,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RoundDialogFragment extends DialogFragment {
-    TextView upPlayer, downPlayer, upR1Winner, downR1Winner;
+    TextView upPlayer, downPlayer;
     EditText upScore, downScore, memo;
     int id;
     int round = 0;
     String upP;
     String downP;
+    DatabaseReference refP;
+    DatabaseReference refRound;
 
 
     //firebase 宣言
@@ -54,14 +56,16 @@ public class RoundDialogFragment extends DialogFragment {
 
         System.out.println("r1:" + getArguments().getString("upPlayer") + getArguments().getString("downPlayer"));
         System.out.println("r2:" + getArguments().getString("downR1winner") + getArguments().getString("upR1winner"));
-
+        System.out.println("r3:" + getArguments().getString("downR2winner") + getArguments().getString("upR2winner"));
 
         //MainActivityから押されたブロックの階層
 
         //EditTextで前回入力した値を取得
 
-        DatabaseReference refP = database.getReference("Status");
-        DatabaseReference refRound = database.getReference("Round");
+        refP = database.getReference("Status");
+        refRound = database.getReference("Round");
+
+
 
         //１回戦のダイアログ
         if (getArguments().getString("upPlayer") != null) {
@@ -74,10 +78,11 @@ public class RoundDialogFragment extends DialogFragment {
             refP.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    upScore.setText(dataSnapshot.child(upP).child("r1point").getValue().toString());
-                    downScore.setText(dataSnapshot.child(downP).child("r1point").getValue().toString());
-                    System.out.println("rrrrr1point=" + dataSnapshot.child(upP).child("r1point").getValue().toString());
-
+                    if(Integer.parseInt(dataSnapshot.child(upP).child("r1point").getValue().toString())!=0) {
+                        upScore.setText(dataSnapshot.child(upP).child("r1point").getValue().toString());
+                        downScore.setText(dataSnapshot.child(downP).child("r1point").getValue().toString());
+                        System.out.println("rrrrr1point=" + dataSnapshot.child(upP).child("r1point").getValue().toString());
+                    }
                 }
 
                 @Override
@@ -106,7 +111,7 @@ public class RoundDialogFragment extends DialogFragment {
             });
             round = 1;
 
-        } else {
+        } else if (getArguments().getString("upR1winner") != null) {
 
             //2回戦のダイアログ
 
@@ -119,11 +124,12 @@ public class RoundDialogFragment extends DialogFragment {
             refP.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    upScore.setText(dataSnapshot.child(upP).child("r2point").getValue().toString());
-                    downScore.setText(dataSnapshot.child(downP).child("r2point").getValue().toString());
-                    System.out.println(upP+downP);
-                    System.out.println("r2point=" + dataSnapshot.child(upP).child("r2point").getValue().toString());
-
+                    if(Integer.parseInt(dataSnapshot.child(upP).child("r2point").getValue().toString())!=0) {
+                        upScore.setText(dataSnapshot.child(upP).child("r2point").getValue().toString());
+                        downScore.setText(dataSnapshot.child(downP).child("r2point").getValue().toString());
+                        System.out.println(upP + downP);
+                        System.out.println("r2point=" + dataSnapshot.child(upP).child("r2point").getValue().toString());
+                    }
                 }
 
                 @Override
@@ -151,6 +157,47 @@ public class RoundDialogFragment extends DialogFragment {
                 }
             });
             round = 2;
+        }else{
+            upP = getArguments().getString("upR2winner");
+            downP = getArguments().getString("downR2winner");
+            upPlayer.setText(upP);
+            downPlayer.setText(downP);
+
+            //playerStatus
+            refP.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(Integer.parseInt(dataSnapshot.child(upP).child("r3point").getValue().toString())!=0) {
+                        upScore.setText(dataSnapshot.child(upP).child("r3point").getValue().toString());
+                        downScore.setText(dataSnapshot.child(downP).child("r3point").getValue().toString());
+                        System.out.println("rrrrr3point=" + dataSnapshot.child(upP).child("r3point").getValue().toString());
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+            //RoundResultが変化したときの取得
+            refRound.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.d("memo",dataSnapshot.child("Round3:").child("memo").getValue().toString()+"aaa");
+                    if (dataSnapshot.child("Round3:").child("memo").getValue().toString() != null) {
+                        memo.setText(dataSnapshot.child("Round3:").child("memo").getValue().toString());
+                        System.out.println("memo=" + dataSnapshot.child("Round3:").child("memo").getValue().toString());
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            round = 3;
         }
         System.out.println("ID=" + id);
 
@@ -172,28 +219,17 @@ public class RoundDialogFragment extends DialogFragment {
                             int uScore = Integer.parseInt(upScore.getText().toString());
                             int dScore = Integer.parseInt(downScore.getText().toString());
                             System.out.println("uScore="+uScore+"\ndScore="+dScore);
-                            //クリックしたブロックid
-                            int id1 = getArguments().getInt("imageR1id");
-                            int id2 = getArguments().getInt("imageR2id");
-                            System.out.println("idhhhhhhhh" + id + "id2=" + id2);
 
                             //2選手名とメモの取得
                             String uu = upPlayer.getText().toString();
                             String dd = downPlayer.getText().toString();
                             String mm = memo.getText().toString();
 
-                            DatabaseReference refP = database.getReference("Status");
-                            DatabaseReference refRound = database.getReference("Round/Round1:" + id1);
 
 
-
-
-                            DatabaseReference ref2Round = database.getReference("Round/Round2:" + id2);
-
-                            //2選手のスコアを格納
-
-                            //一回戦
+                            //一回戦, ２選手のスコアを格納
                             if (round == 1) {
+                                refRound = database.getReference("Round/Round1:" + id);
                                 PlayersStatus psu = new PlayersStatus(uu, uScore, 0, 0);
                                 refP.child(uu).setValue(psu);
                                 PlayersStatus psd = new PlayersStatus(dd, dScore, 0, 0);
@@ -214,17 +250,18 @@ public class RoundDialogFragment extends DialogFragment {
                                     Toast.makeText(getActivity(), "勝敗を決めてください", Toast.LENGTH_LONG).show();
                                 }
                             }
-                            //２回戦.  修正する必要あり！！！！！！！！！！
+                            //2回戦. ２選手のスコアを格納child
                             else if (round == 2) {
                                 System.out.println(uu + "---" + dd);
 
+                                refRound = database.getReference("Round/Round2:");
 
                                 Map<String, Object> sender = new HashMap<>();
-                                sender.put("r2point", uScore);
+                                sender.put("r3point", uScore);
                                 refP.child(uu).updateChildren(sender);
 
                                 Map<String, Object> sender2 = new HashMap<>();
-                                sender2.put("r2point", dScore);
+                                sender2.put("r3point", dScore);
                                 refP.child(dd).updateChildren(sender2);
 
 
@@ -232,13 +269,42 @@ public class RoundDialogFragment extends DialogFragment {
                                 if (uScore > dScore) {
                                     Toast.makeText(getActivity(), uu + " won", Toast.LENGTH_LONG).show();
                                     RoundResult R = new RoundResult(uScore, dScore, uu, dd, mm);
-                                    ref2Round.setValue(R);
+                                    refRound.setValue(R);
 
 
                                 } else if (uScore < dScore) {
                                     Toast.makeText(getActivity(), dd + " won", Toast.LENGTH_LONG).show();
                                     RoundResult R = new RoundResult(uScore, dScore, dd, uu, mm);
-                                    ref2Round.setValue(R);
+                                    refRound.setValue(R);
+
+                                } else {
+                                    Toast.makeText(getActivity(), "勝敗を決めてください", Toast.LENGTH_LONG).show();
+                                }
+                            }else{
+                                System.out.println(uu + "---" + dd);
+
+                                refRound = database.getReference("Round/Round3:");
+
+                                Map<String, Object> sender = new HashMap<>();
+                                sender.put("r3point", uScore);
+                                refP.child(uu).updateChildren(sender);
+
+                                Map<String, Object> sender2 = new HashMap<>();
+                                sender2.put("r3point", dScore);
+                                refP.child(dd).updateChildren(sender2);
+
+
+                                //RoundResultに結果を格納
+                                if (uScore > dScore) {
+                                    Toast.makeText(getActivity(), uu + " won", Toast.LENGTH_LONG).show();
+                                    RoundResult R = new RoundResult(uScore, dScore, uu, dd, mm);
+                                    refRound.setValue(R);
+
+
+                                } else if (uScore < dScore) {
+                                    Toast.makeText(getActivity(), dd + " won", Toast.LENGTH_LONG).show();
+                                    RoundResult R = new RoundResult(uScore, dScore, dd, uu, mm);
+                                    refRound.setValue(R);
 
                                 } else {
                                     Toast.makeText(getActivity(), "勝敗を決めてください", Toast.LENGTH_LONG).show();
