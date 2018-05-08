@@ -51,11 +51,10 @@ public class MainActivity extends AppCompatActivity {
         //ランダムに格納
         Random r = new Random();
         int n = 0;
-        System.out.println("nande?");
         while (n != players.length) {
             int value = r.nextInt(players.length);
             if (players[value] == null) {
-                players[value] = "Player" + n;
+                players[value] = "player" + n;
                 System.out.println(n + players[value]);
                 n++;
             }
@@ -90,8 +89,9 @@ public class MainActivity extends AppCompatActivity {
         firstWinner = (ImageView) findViewById(R.id.firstWinner);
 
 
-        //選手の人数分のdataBaseを宣言
-        DatabaseReference[] ref = new DatabaseReference[8];
+        //dataBaseを宣言
+        DatabaseReference refP = database.getReference("Status");
+
 
         r1Winner = new String[4];
 
@@ -99,11 +99,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < imageR1.length; i++) {
 
             try {
-                //両者の結果を読み込み
-                ref[2 * i] = database.getReference("Status/player" + 2 * i);
-                ref[2 * i + 1] = database.getReference("Status/player" + (2 * i + 1));
-
-                //試合結果を読み込み
+                //結果を読み込み
                 DatabaseReference ref1Round = database.getReference("Round/Round1:" + i);
 
                 final int j = i;
@@ -151,38 +147,25 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                ref[2 * i].
+                refP.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        System.out.println("r1point=" + dataSnapshot.child(players[2*j]).child("r1point").getValue());
+                        System.out.println("r2point=" + dataSnapshot.child(players[2*j]).child("r2point").getValue());
+                        System.out.println("r3point=" + dataSnapshot.child(players[2*j]).child("r3point").getValue());
 
-                        addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                System.out.println(dataSnapshot.child("r1point").getValue());
-                                System.out.println(dataSnapshot.child("r2point").getValue());
-                                System.out.println(dataSnapshot.child("r3point").getValue());
-                            }
+                        System.out.println("r1point=" + dataSnapshot.child(players[2*j+1]).child("r1point").getValue());
+                        System.out.println("r2point=" + dataSnapshot.child(players[2*j+1]).child("r2point").getValue());
+                        System.out.println("r3point=" + dataSnapshot.child(players[2*j+1]).child("r3point").getValue());
+                    }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                            }
-                        });
+                    }
+                });
 
 
-                ref[2 * i + 1].
-
-                        addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                System.out.println(dataSnapshot.child("r1point").getValue());
-                                System.out.println(dataSnapshot.child("r2point").getValue());
-                                System.out.println(dataSnapshot.child("r3point").getValue());
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
             } catch (Exception e) {
                 Log.d("Status/", "player" + i + "はカラ");
             }
@@ -196,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle args = new Bundle();
 
         for (int i = 0; i < imageR1.length; i++) {
+            //クリックしたブロックを判別
             if (v == imageR1[i]) {
                 args.putInt("imageR1id", i);
                 args.putString("upPlayer", players[2 * i]);
@@ -205,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             if (i % 2 == 0 && v == imageR2[i / 2]) {
-                System.out.println("r1Winner="+r1Winner[i]);
+                System.out.println("r1Winner=" + r1Winner[i]);
                 if (r1Winner[i] != null && r1Winner[i + 1] != null) {
 
                     System.out.println("imageR2lllllllllllll");
