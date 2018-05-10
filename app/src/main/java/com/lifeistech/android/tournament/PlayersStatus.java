@@ -14,6 +14,7 @@ public class PlayersStatus {
         this.r1point = r1point;
         this.r2point = r2point;
         this.r3point = r3point;
+        this.name=name;
     }
 
     public void setName(String name) {
