@@ -19,9 +19,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="・大会名" />
+                android:text="・大会名を決めてください" />
 
             <EditText
+                android:id="@+id/gameName"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:hint="大会名"
@@ -36,12 +37,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="・人数" />
+                android:text="・パスワードを決めてください" />
 
             <EditText
+                android:id="@+id/password"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:hint="人数"
+                android:hint="password"
                 android:singleLine="true" />
         </LinearLayout>
 
@@ -85,5 +87,12 @@
                     android:text="ランダムで生成する" />
             </LinearLayout>
         </LinearLayout>
+
+        <Button
+            android:onClick="newCreate"
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
     </LinearLayout>
 </RelativeLayout>

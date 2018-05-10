@@ -126,6 +126,7 @@ public class RoundDialogFragment extends DialogFragment {
                     if (Integer.parseInt(dataSnapshot.child(upP).child("r2point").getValue().toString()) != 0) {
                         upScore.setText(dataSnapshot.child(upP).child("r2point").getValue().toString());
                         downScore.setText(dataSnapshot.child(downP).child("r2point").getValue().toString());
+
                     }
                 }
 
@@ -154,7 +155,7 @@ public class RoundDialogFragment extends DialogFragment {
             });
             round = 2;
             title = "準決勝";
-        } else {
+        } else if(getArguments().getString("upR2winner") != null){
 
             upP = getArguments().getString("upR2winner");
             downP = getArguments().getString("downR2winner");
@@ -244,56 +245,34 @@ public class RoundDialogFragment extends DialogFragment {
                                 refP.child(dd).setValue(psd);
 
                                 refRound = database.getReference("Round/Round1:" + id);
-                                //RoundResultに結果を格納
-                                if (uScore > dScore) {
-                                    Toast.makeText(getActivity(), uu + " won", Toast.LENGTH_LONG).show();
-                                    RoundResult R = new RoundResult(uScore, dScore, uu, dd, mm);
-                                    refRound.setValue(R);
-
-
-                                } else if (uScore < dScore) {
-                                    Toast.makeText(getActivity(), dd + " won", Toast.LENGTH_LONG).show();
-                                    RoundResult R = new RoundResult(uScore, dScore, dd, uu, mm);
-                                    refRound.setValue(R);
-
-                                } else {
-                                    Toast.makeText(getActivity(), "勝敗を決めてください", Toast.LENGTH_LONG).show();
-                                }
                             }
                             //2回戦. ２選手のスコアを格納child
                             else if (round == 2) {
                                 System.out.println(uu + "---" + dd);
 
-                                refRound = database.getReference("Round/Round2:"+id);
 
                                 Map<String, Object> sender = new HashMap<>();
                                 sender.put("r2point", uScore);
                                 refP.child(uu).updateChildren(sender);
 
+                                //３Rの結果０にする
+                                Map<String,Object> s=new HashMap<>();
+                                s.put("r3point",0);
+                                refP.child(uu).updateChildren(s);
+
                                 Map<String, Object> sender2 = new HashMap<>();
                                 sender2.put("r2point", dScore);
                                 refP.child(dd).updateChildren(sender2);
 
+                                //３Rの結果0にする
+                                Map<String, Object> s2 = new HashMap<>();
+                                s2.put("r3point",0);
+                                refP.child(dd).updateChildren(s2);
 
-                                //RoundResultに結果を格納
-                                if (uScore > dScore) {
-                                    Toast.makeText(getActivity(), uu + " won", Toast.LENGTH_LONG).show();
-                                    RoundResult R = new RoundResult(uScore, dScore, uu, dd, mm);
-                                    refRound.setValue(R);
-
-
-                                } else if (uScore < dScore) {
-                                    Toast.makeText(getActivity(), dd + " won", Toast.LENGTH_LONG).show();
-                                    RoundResult R = new RoundResult(uScore, dScore, dd, uu, mm);
-                                    refRound.setValue(R);
-
-                                } else {
-                                    Toast.makeText(getActivity(), "勝敗を決めてください", Toast.LENGTH_LONG).show();
-                                }
+                                refRound = database.getReference("Round/Round2:"+id);
                             } else {
                                 System.out.println(uu + "---" + dd);
 
-                                refRound = database.getReference("Round/Round3:0");
 
                                 Map<String, Object> sender = new HashMap<>();
                                 sender.put("r3point", uScore);
@@ -303,24 +282,24 @@ public class RoundDialogFragment extends DialogFragment {
                                 sender2.put("r3point", dScore);
                                 refP.child(dd).updateChildren(sender2);
 
-
-                                //RoundResultに結果を格納
-                                if (uScore > dScore) {
-                                    Toast.makeText(getActivity(), uu + " won", Toast.LENGTH_LONG).show();
-                                    RoundResult R = new RoundResult(uScore, dScore, uu, dd, mm);
-                                    refRound.setValue(R);
-
-
-                                } else if (uScore < dScore) {
-                                    Toast.makeText(getActivity(), dd + " won", Toast.LENGTH_LONG).show();
-                                    RoundResult R = new RoundResult(uScore, dScore, dd, uu, mm);
-                                    refRound.setValue(R);
-
-                                } else {
-                                    Toast.makeText(getActivity(), "勝敗を決めてください", Toast.LENGTH_LONG).show();
-                                }
+                                refRound = database.getReference("Round/Round3:0");
                             }
 
+                            //RoundResultに結果を格納
+                            if (uScore > dScore) {
+                                Toast.makeText(getActivity(), uu + " won", Toast.LENGTH_LONG).show();
+                                RoundResult R = new RoundResult(uScore, dScore, uu, dd, mm);
+                                refRound.setValue(R);
+
+
+                            } else if (uScore < dScore) {
+                                Toast.makeText(getActivity(), dd + " won", Toast.LENGTH_LONG).show();
+                                RoundResult R = new RoundResult(uScore, dScore, dd, uu, mm);
+                                refRound.setValue(R);
+
+                            } else {
+                                Toast.makeText(getActivity(), "勝敗を決めてください", Toast.LENGTH_LONG).show();
+                            }
 
                         } catch (Exception e) {
                             Log.d("error", "occured");

@@ -6,6 +6,8 @@ public class PlayersStatus {
     int r2point;
     int r3point;
 
+    int wonCount,lostCount;
+
     public PlayersStatus() {
 
     }
