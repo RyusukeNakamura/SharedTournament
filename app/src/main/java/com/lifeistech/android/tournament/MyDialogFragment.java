@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -30,7 +31,7 @@ public class MyDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        Toast.makeText(getActivity(),"completed", Toast.LENGTH_LONG).show();
+                        Snackbar.make(new MainActivity().layout,"completed", Toast.LENGTH_LONG).show();
                     }
                 })
                 .setView(layout)

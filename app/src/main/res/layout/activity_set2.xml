@@ -1,9 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Set2Activity">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/gameN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="大会名"
+            android:textSize="30sp" />
+
+        <TextView
+        android:id="@+id/confirmI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ID値"
+        android:textSize="20sp" />
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="名前を入力して下さい"
+            android:textSize="15sp" />
+
+
+        <EditText
+            android:id="@+id/editName0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="playerName1"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/editName1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="playerName2"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/editName2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="playerName3"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/editName3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="playerName4"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/editName4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="playerName5"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/editName5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="playerName6"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/editName6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="playerName7"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/editName7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="playerName8"
+            android:singleLine="true" />
+
+        <Button
+            android:onClick="createTournament"
+            android:text="OK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>

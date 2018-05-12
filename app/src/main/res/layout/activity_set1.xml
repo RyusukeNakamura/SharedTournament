@@ -7,6 +7,7 @@
     tools:context=".Set1Activity">
 
     <LinearLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -14,36 +15,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="・大会名を決めてください" />
+                android:text="・大会名を決めて下さい    " />
 
             <EditText
                 android:id="@+id/gameName"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:hint="大会名"
-                android:singleLine="true" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="・パスワードを決めてください" />
-
-            <EditText
-                android:id="@+id/password"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:hint="password"
                 android:singleLine="true" />
         </LinearLayout>
 
@@ -55,38 +39,43 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="・組み合わせ" />
+                android:text="・IDを決めて下さい(4文字以上半角英数字)" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="※仲間と共有する際必要です" />
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/id"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="ID"
+                android:singleLine="true" />
+            <TextView
+                android:id="@+id/confirmId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="自分でつくる" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ランダムで生成する" />
-            </LinearLayout>
+                android:layout_gravity="center"/>
         </LinearLayout>
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:text="・人数を入力して下さい(4～8人)" />-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/aNumber"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:hint="人数"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+        <!--</LinearLayout>-->
 
         <Button
             android:onClick="newCreate"

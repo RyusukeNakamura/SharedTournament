@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +28,9 @@ import java.util.Map;
 public class RoundDialogFragment extends DialogFragment {
     TextView upPlayer, downPlayer;
     EditText upScore, downScore, memo;
-    int id;
+    int id, idU,idD;
     int round = 0;
-    String upP, downP;
+    String userId, upP, downP;
     String title;
     DatabaseReference refP;
     DatabaseReference refRound;
@@ -53,34 +54,44 @@ public class RoundDialogFragment extends DialogFragment {
         downScore = (EditText) layout.findViewById(R.id.downScore);
         memo = (EditText) layout.findViewById(R.id.memo);
 
+        id = getArguments().getInt("imageR1id");
+
+
 
         System.out.println("r1:" + getArguments().getString("upPlayer") + getArguments().getString("downPlayer"));
         System.out.println("r2:" + getArguments().getString("downR1winner") + getArguments().getString("upR1winner"));
         System.out.println("r3:" + getArguments().getString("downR2winner") + getArguments().getString("upR2winner"));
 
-        //MainActivityから押されたブロックの階層
 
+        userId = getArguments().getString("userId");
+        Log.d("userId", userId);
 
         //EditTextで前回入力した値を取得
 
-        refP = database.getReference("Status");
-        refRound = database.getReference("Round");
+        refP = database.getReference(userId + "/Status");
+        refRound = database.getReference(userId + "/Round");
 
+        Log.d("afterRefP,refRound", userId);
 
-        //１回戦のダイアログ
+        //１回戦のダイアログ---------------------------------------------------------------------------
         if (getArguments().getString("upPlayer") != null) {
             upP = getArguments().getString("upPlayer");
             downP = getArguments().getString("downPlayer");
             upPlayer.setText(upP);
             downPlayer.setText(downP);
 
+            idU=2*id;
+            idD=2*id+1;
+
+
+
             //playerStatus
             refP.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (Integer.parseInt(dataSnapshot.child(upP).child("r1point").getValue().toString()) != 0) {
-                        upScore.setText(dataSnapshot.child(upP).child("r1point").getValue().toString());
-                        downScore.setText(dataSnapshot.child(downP).child("r1point").getValue().toString());
+                    if (Integer.parseInt(dataSnapshot.child("player" + idU).child("r1point").getValue().toString()) != 0) {
+                        upScore.setText(dataSnapshot.child("player" + idU).child("r1point").getValue().toString());
+                        downScore.setText(dataSnapshot.child("player" + idD).child("r1point").getValue().toString());
                     }
                 }
 
@@ -90,13 +101,12 @@ public class RoundDialogFragment extends DialogFragment {
                 }
             });
 
-            id = getArguments().getInt("imageR1id");
 
             //RoundResultが変化したときの取得
             refRound.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                 //   Log.d("memo", dataSnapshot.child("Round1:" + id).child("memo").getValue().toString() + "1Rmemo");
+                    //   Log.d("memo", dataSnapshot.child("Round1:" + id).child("memo").getValue().toString() + "1Rmemo");
                     if (dataSnapshot.child("Round1:" + id).child("memo").getValue().toString() != null) {
                         memo.setText(dataSnapshot.child("Round1:" + id).child("memo").getValue().toString());
                     }
@@ -112,20 +122,24 @@ public class RoundDialogFragment extends DialogFragment {
 
         } else if (getArguments().getString("upR1winner") != null) {
 
-            //2回戦のダイアログ
+            //2回戦のダイアログ----------------------------------------------------------------------
 
             upP = getArguments().getString("upR1winner");
             downP = getArguments().getString("downR1winner");
             upPlayer.setText(upP);
             downPlayer.setText(downP);
 
+            idU = getArguments().getInt("imageR2up");
+            idD = getArguments().getInt("imageR2down");
+
+
             //playerStatus
             refP.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (Integer.parseInt(dataSnapshot.child(upP).child("r2point").getValue().toString()) != 0) {
-                        upScore.setText(dataSnapshot.child(upP).child("r2point").getValue().toString());
-                        downScore.setText(dataSnapshot.child(downP).child("r2point").getValue().toString());
+                    if (Integer.parseInt(dataSnapshot.child("player" + idU).child("r2point").getValue().toString()) != 0) {
+                        upScore.setText(dataSnapshot.child("player" + idU).child("r2point").getValue().toString());
+                        downScore.setText(dataSnapshot.child("player" + idD).child("r2point").getValue().toString());
 
                     }
                 }
@@ -136,15 +150,14 @@ public class RoundDialogFragment extends DialogFragment {
                 }
             });
 
-            id = getArguments().getInt("imageR2id");
 
             //RoundResultが変化したときの取得
             refRound.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                  //  Log.d("memo", dataSnapshot.child("Round2:" + id).child("memo").getValue().toString() + "2Rmemo");
-                    if (dataSnapshot.child("Round2:" + id).child("memo").getValue().toString() != null) {
-                        memo.setText(dataSnapshot.child("Round2:" + id).child("memo").getValue().toString());
+                    //  Log.d("memo", dataSnapshot.child("Round2:" + id).child("memo").getValue().toString() + "2Rmemo");
+                    if (dataSnapshot.child("Round2:" + id/2).child("memo").getValue().toString() != null) {
+                        memo.setText(dataSnapshot.child("Round2:" + id/2).child("memo").getValue().toString());
                     }
                 }
 
@@ -155,20 +168,23 @@ public class RoundDialogFragment extends DialogFragment {
             });
             round = 2;
             title = "準決勝";
-        } else if(getArguments().getString("upR2winner") != null){
+        } else if (getArguments().getString("upR2winner") != null) {
 
             upP = getArguments().getString("upR2winner");
             downP = getArguments().getString("downR2winner");
             upPlayer.setText(upP);
             downPlayer.setText(downP);
 
+            idU = getArguments().getInt("imageR3up");
+            idD = getArguments().getInt("imageR2down");
+
             //playerStatus
             refP.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (Integer.parseInt(dataSnapshot.child(upP).child("r3point").getValue().toString()) != 0) {
-                        upScore.setText(dataSnapshot.child(upP).child("r3point").getValue().toString());
-                        downScore.setText(dataSnapshot.child(downP).child("r3point").getValue().toString());
+                    if (Integer.parseInt(dataSnapshot.child("player" + idU).child("r3point").getValue().toString()) != 0) {
+                        upScore.setText(dataSnapshot.child("player" + idU).child("r3point").getValue().toString());
+                        downScore.setText(dataSnapshot.child("player" + idD).child("r3point").getValue().toString());
                     }
                 }
 
@@ -183,7 +199,7 @@ public class RoundDialogFragment extends DialogFragment {
             refRound.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                  //  Log.d("memo", dataSnapshot.child("Round3:0").child("memo").getValue().toString() + "3Rmemo");
+                    //  Log.d("memo", dataSnapshot.child("Round3:0").child("memo").getValue().toString() + "3Rmemo");
                     if (dataSnapshot.child("Round3:0").child("memo").getValue().toString() != null) {
                         memo.setText(dataSnapshot.child("Round3:0").child("memo").getValue().toString());
 
@@ -201,15 +217,12 @@ public class RoundDialogFragment extends DialogFragment {
         System.out.println("ID=" + id);
 
 
-
-
-
         //ダイアログを生成
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         System.out.println("Dialog created.");
 
 
-        //ダイアログの設定
+        //ダイアログの設定---------------------------------------------------------------------------
         return builder.setTitle(title)
                 .setIcon(R.drawable.ic_launcher_background)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -228,23 +241,21 @@ public class RoundDialogFragment extends DialogFragment {
                             String dd = downPlayer.getText().toString();
                             String mm = memo.getText().toString();
 
+                            Log.d("uu+dd+memo",uu+dd+mm);
+
                             //一回戦, ２選手のスコアを格納
+
+
                             if (round == 1) {
 
-
-
-
-                                //名前格納するコンストラクタは果たして必要なのか.
-
-
-
-                                
+                                Log.d("round1 idU,D",""+idU+idD);
                                 PlayersStatus psu = new PlayersStatus(uu, uScore, 0, 0);
-                                refP.child(uu).setValue(psu);
+                                refP.child("player"+idU).setValue(psu);
                                 PlayersStatus psd = new PlayersStatus(dd, dScore, 0, 0);
-                                refP.child(dd).setValue(psd);
+                                refP.child("player"+idD).setValue(psd);
 
-                                refRound = database.getReference("Round/Round1:" + id);
+                                refRound = database.getReference(userId+"/Round/Round1:" + id);
+                                Log.d("refRound 1R","id="+id);
                             }
                             //2回戦. ２選手のスコアを格納child
                             else if (round == 2) {
@@ -253,52 +264,53 @@ public class RoundDialogFragment extends DialogFragment {
 
                                 Map<String, Object> sender = new HashMap<>();
                                 sender.put("r2point", uScore);
-                                refP.child(uu).updateChildren(sender);
+                                refP.child("player"+idU).updateChildren(sender);
 
                                 //３Rの結果０にする
-                                Map<String,Object> s=new HashMap<>();
-                                s.put("r3point",0);
-                                refP.child(uu).updateChildren(s);
+                                Map<String, Object> s = new HashMap<>();
+                                s.put("r3point", 0);
+                                refP.child("player"+idU).updateChildren(s);
+
 
                                 Map<String, Object> sender2 = new HashMap<>();
                                 sender2.put("r2point", dScore);
-                                refP.child(dd).updateChildren(sender2);
+                                refP.child("player"+idD).updateChildren(sender2);
 
                                 //３Rの結果0にする
                                 Map<String, Object> s2 = new HashMap<>();
-                                s2.put("r3point",0);
-                                refP.child(dd).updateChildren(s2);
+                                s2.put("r3point", 0);
+                                refP.child("player"+idD).updateChildren(s2);
 
-                                refRound = database.getReference("Round/Round2:"+id);
+                                refRound = database.getReference(userId+"/Round/Round2:" + id/2);
                             } else {
                                 System.out.println(uu + "---" + dd);
 
 
                                 Map<String, Object> sender = new HashMap<>();
                                 sender.put("r3point", uScore);
-                                refP.child(uu).updateChildren(sender);
+                                refP.child("player"+idU).updateChildren(sender);
 
                                 Map<String, Object> sender2 = new HashMap<>();
                                 sender2.put("r3point", dScore);
-                                refP.child(dd).updateChildren(sender2);
+                                refP.child("player"+idD).updateChildren(sender2);
 
-                                refRound = database.getReference("Round/Round3:0");
+                                refRound = database.getReference(userId+"/Round/Round3:0");
                             }
 
                             //RoundResultに結果を格納
                             if (uScore > dScore) {
-                                Toast.makeText(getActivity(), uu + " won", Toast.LENGTH_LONG).show();
+                                Snackbar.make(MainActivity.layout, uu + " won", Snackbar.LENGTH_LONG).show();
                                 RoundResult R = new RoundResult(uScore, dScore, uu, dd, mm);
                                 refRound.setValue(R);
 
 
                             } else if (uScore < dScore) {
-                                Toast.makeText(getActivity(), dd + " won", Toast.LENGTH_LONG).show();
+                                Snackbar.make(MainActivity.layout, dd + " won", Snackbar.LENGTH_LONG).show();
                                 RoundResult R = new RoundResult(uScore, dScore, dd, uu, mm);
                                 refRound.setValue(R);
 
                             } else {
-                                Toast.makeText(getActivity(), "勝敗を決めてください", Toast.LENGTH_LONG).show();
+                                Snackbar.make(MainActivity.layout, "勝敗を決めてください", Snackbar.LENGTH_LONG).show();
                             }
 
                         } catch (Exception e) {

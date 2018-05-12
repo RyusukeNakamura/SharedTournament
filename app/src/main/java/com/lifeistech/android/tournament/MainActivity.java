@@ -1,6 +1,8 @@
 package com.lifeistech.android.tournament;
 
 import android.app.DialogFragment;
+import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.provider.ContactsContract;
 import android.support.constraint.solver.widgets.Snapshot;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
+    static LinearLayout layout;
+
 
     ImageView[] imageR1, imageR2;
     ImageView imageR3, firstWinner;
@@ -43,29 +48,27 @@ public class MainActivity extends AppCompatActivity {
     int done2R = -1;
     int done3R = -1;
 
-    final int WC = GridLayout.LayoutParams.WRAP_CONTENT;
+    int WC = GridLayout.LayoutParams.WRAP_CONTENT;
+    int n = 0;
+    int ok = 0;
 
+    String str, gName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        layout = (LinearLayout) findViewById(R.id.linearLayout);
+        Intent intent = getIntent();
+        str = intent.getStringExtra("createdId");
+        gName = intent.getStringExtra("gameName");
+        Log.d("newCreatedID", str);
+        Log.d("gameName", gName);
 
+        //Set2で生成した配列を取得
+        players = intent.getStringArrayExtra("players");
 
-
-        players = new String[8];
-        //ランダムに格納
-        Random r = new Random();
-        int n = 0;
-        while (n != players.length) {
-            int value = r.nextInt(players.length);
-            if (players[value] == null) {
-                players[value] = "player" + n;
-                System.out.println(n + players[value]);
-                n++;
-            }
-        }
 
 
         gridLayout = (GridLayout) findViewById(R.id.gridLayout);
@@ -79,9 +82,11 @@ public class MainActivity extends AppCompatActivity {
         textView[6] = (TextView) findViewById(R.id.name7);
         textView[7] = (TextView) findViewById(R.id.name8);
 
+        Log.d("playesを", "textView");
         for (int i = 0; i < textView.length; i++) {
             textView[i].setText(players[i]);
         }
+
 
         imageR1 = new ImageView[4];
         imageR1[0] = (ImageView) findViewById(R.id.r1p12);
@@ -99,25 +104,9 @@ public class MainActivity extends AppCompatActivity {
 
         //dataBaseを宣言
 
-        DatabaseReference refP = database.getReference("Status");
-        DatabaseReference refRound = database.getReference("Round");
+        DatabaseReference refP = database.getReference(str+"/Status");
+        DatabaseReference refRound = database.getReference(str+"/Round");
 
-
-        //firebase のdatabaseを初期化
-        for (int i = 0; i < players.length; i++) {
-            refP.child("player" + i).setValue(new PlayersStatus("player" + i, 0, 0, 0));
-
-            if (i % 2 == 0) {
-                refRound.child("Round1:" + i / 2).setValue(new RoundResult(0, 0, "", "", ""));
-            }
-            if (i % 4 == 0) {
-                refRound.child("Round2:" + i / 4).setValue(new RoundResult(0, 0, "", "", ""));
-            }
-            if (i % 8 == 0) {
-                refRound.child("Round3:" + i / 8).setValue(new RoundResult(0, 0, "", "", ""));
-            }
-
-        }
 
         r1Winner = new String[4];
         r2Winner = new String[2];
@@ -133,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
             refRound.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.d("1RonDataChanged","datasnapshot");
                     for (int i = 0; i < imageR1.length; i++) {
                         //一回戦の結果取得
                         String w = String.valueOf(dataSnapshot.child("Round1:" + i).child("winner").getValue());
@@ -149,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
                             r1Winner[i] = w;
                             done1R = i;
                         } else if (upP < downP) {
-//                            imageR1[j].setImageResource(R.drawable.ko_bottom_won);
                             imageR1[i].setBackgroundResource(R.drawable.ko_bottom_won);
                             Log.d("up<down", "imageR1down");
                             r1Winner[i] = w;
@@ -209,32 +198,33 @@ public class MainActivity extends AppCompatActivity {
                             if (finalist0 == 1 && finalist1 == 1) {
                                 imageR3.setBackgroundResource(R.drawable.ko_both_done);
                             }
+
                         }
-                    }
 
 
-                    String w3 = String.valueOf(dataSnapshot.child("Round3:0").child("winner").getValue());
-                    String l3 = (String) dataSnapshot.child("Round3:0").child("loser").getValue();
-                    int upP3 = parseInt(dataSnapshot.child("Round3:0").child("up").getValue().toString());
-                    int downP3 = parseInt(dataSnapshot.child("Round3:0").child("down").getValue().toString());
-                    System.out.println("3Rwinner:" + w3 + "\n3Rloser:" + l3);
+                        String w3 = String.valueOf(dataSnapshot.child("Round3:0").child("winner").getValue());
+                        String l3 = (String) dataSnapshot.child("Round3:0").child("loser").getValue();
+                        int upP3 = parseInt(dataSnapshot.child("Round3:0").child("up").getValue().toString());
+                        int downP3 = parseInt(dataSnapshot.child("Round3:0").child("down").getValue().toString());
+                        System.out.println("3Rwinner:" + w3 + "\n3Rloser:" + l3);
 
-                    //勝者を格納
-                    if (upP3 > downP3) {
-                        imageR3.setBackgroundResource(R.drawable.ko_top_won);
-                        Log.d("up>down", "r3Winner0" + ":" + w3);
-                        done3R = 0;
-                    } else if (upP3 < downP3)
+                        //勝者を格納
+                        if (upP3 > downP3) {
+                            imageR3.setBackgroundResource(R.drawable.ko_top_won);
+                            Log.d("up>down", "r3Winner0" + ":" + w3);
+                            done3R = 0;
+                        } else if (upP3 < downP3)
 
-                    {
-                        imageR3.setBackgroundResource(R.drawable.ko_bottom_won);
-                        Log.d("up<down", "r3Winner0" + ":" + w3);
-                        done3R = 0;
-                    }
-                    //imageR3の画像変更, ２回戦完了
-                    if (done3R == 0) {
-                        Log.d("imageR3", "firstWinner decided");
-                        firstWinner.setBackgroundResource(R.drawable.red_line);
+                        {
+                            imageR3.setBackgroundResource(R.drawable.ko_bottom_won);
+                            Log.d("up<down", "r3Winner0" + ":" + w3);
+                            done3R = 0;
+                        }
+                        //imageR3の画像変更, ２回戦完了
+                        if (done3R == 0) {
+                            Log.d("imageR3", "firstWinner decided");
+                            firstWinner.setBackgroundResource(R.drawable.red_line);
+                        }
                     }
                 }
 
@@ -269,7 +259,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.d("Status/", "playerはカラ");
         }
-
     }
 
 
@@ -282,6 +271,8 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < imageR1.length; i++) {
             //クリックしたブロックを判別
             if (v == imageR1[i]) {
+                args.putString("userId", str);
+
                 args.putInt("imageR1id", i);
                 args.putString("upPlayer", players[2 * i]);
                 args.putString("downPlayer", players[2 * i + 1]);
@@ -289,13 +280,27 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show(getFragmentManager(), "round");
                 break;
             }
-            if (i % 2 == 0 && v == imageR2[i / 2]) {
-                System.out.println("r1Winner=" + r1Winner[i]);
-                if (r1Winner[i] != null && r1Winner[i + 1] != null) {
+        }
+        for (int i = 0; i < imageR2.length; i++) {
+            if (v == imageR2[i]) {
+                System.out.println("r1Winner=" + r1Winner[2 * i]);
+                if (r1Winner[i] != null && r1Winner[2 * i + 1] != null) {
+                    args.putString("userId", str);
 
-                    args.putInt("imageR2id", i / 2);
-                    args.putString("upR1winner", r1Winner[i]);
-                    args.putString("downR1winner", r1Winner[i + 1]);
+                    //上から何番目か!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    for (int j = 0; j < players.length; j++) {
+                        if (r1Winner[2 * i] == players[j]) {
+                            args.putInt("imageR2up", j);
+                        }
+                        if(r1Winner[2*i]==players[j]){
+                            args.putInt("imageR2down",j);
+                        }
+
+                    }
+
+
+                    args.putString("upR1winner", r1Winner[2 * i]);
+                    args.putString("downR1winner", r1Winner[2 * i + 1]);
                     dialog.setArguments(args);
                     dialog.show(getFragmentManager(), "round");
                 } else {
@@ -304,20 +309,29 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             }
-            if (v == imageR3 && i % 4 == 0) {
-                System.out.println("firstWinner=");
-                if (r2Winner[0] != null && r2Winner[1] != null) {
-
-                    args.putString("upR2winner", r2Winner[0]);
-                    args.putString("downR2winner", r2Winner[1]);
-                    dialog.setArguments(args);
-                    dialog.show(getFragmentManager(), "round");
-                } else {
-                    Toast.makeText(getApplicationContext(), "下位の勝敗を決めて下さい", Toast.LENGTH_LONG).show();
-                }
-            }
-
         }
+        if (v == imageR3) {
+            System.out.println("firstWinner=");
+            if (r2Winner[0] != null && r2Winner[1] != null) {
+
+                for(int j=0;j<players.length;j++){
+                    if(r1Winner[0]==players[j]){
+                        args.putInt("imageR3up",j);
+                    }
+                    if(r1Winner[1]==players[j]){
+                        args.putInt("imageR3down",j);
+                    }
+
+                }
+                args.putString("upR2winner", r2Winner[0]);
+                args.putString("downR2winner", r2Winner[1]);
+                dialog.setArguments(args);
+                dialog.show(getFragmentManager(), "round");
+            } else {
+                Toast.makeText(getApplicationContext(), "下位の勝敗を決めて下さい", Toast.LENGTH_LONG).show();
+            }
+        }
+
 
     }
 
