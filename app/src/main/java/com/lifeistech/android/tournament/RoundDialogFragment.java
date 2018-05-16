@@ -54,7 +54,8 @@ public class RoundDialogFragment extends DialogFragment {
         downScore = (EditText) layout.findViewById(R.id.downScore);
         memo = (EditText) layout.findViewById(R.id.memo);
 
-        id = getArguments().getInt("imageR1id");
+        id = getArguments().getInt("id");
+        Log.d("getArguments","id="+id);
 
 
 
@@ -82,6 +83,9 @@ public class RoundDialogFragment extends DialogFragment {
 
             idU=2*id;
             idD=2*id+1;
+
+            Log.d("1R idU,idD",idU+","+idD);
+
 
 
 
@@ -132,6 +136,8 @@ public class RoundDialogFragment extends DialogFragment {
             idU = getArguments().getInt("imageR2up");
             idD = getArguments().getInt("imageR2down");
 
+            Log.d("2R idU,idD",idU+","+idD);
+
 
             //playerStatus
             refP.addValueEventListener(new ValueEventListener() {
@@ -156,8 +162,8 @@ public class RoundDialogFragment extends DialogFragment {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     //  Log.d("memo", dataSnapshot.child("Round2:" + id).child("memo").getValue().toString() + "2Rmemo");
-                    if (dataSnapshot.child("Round2:" + id/2).child("memo").getValue().toString() != null) {
-                        memo.setText(dataSnapshot.child("Round2:" + id/2).child("memo").getValue().toString());
+                    if (dataSnapshot.child("Round2:" + id).child("memo").getValue().toString() != null) {
+                        memo.setText(dataSnapshot.child("Round2:" + id).child("memo").getValue().toString());
                     }
                 }
 
@@ -170,13 +176,17 @@ public class RoundDialogFragment extends DialogFragment {
             title = "準決勝";
         } else if (getArguments().getString("upR2winner") != null) {
 
+            Log.d("決勝","dialog");
+
             upP = getArguments().getString("upR2winner");
             downP = getArguments().getString("downR2winner");
             upPlayer.setText(upP);
             downPlayer.setText(downP);
 
             idU = getArguments().getInt("imageR3up");
-            idD = getArguments().getInt("imageR2down");
+            idD = getArguments().getInt("imageR3down");
+            Log.d("3R idU,idD",idU+","+idD);
+
 
             //playerStatus
             refP.addValueEventListener(new ValueEventListener() {
@@ -199,7 +209,7 @@ public class RoundDialogFragment extends DialogFragment {
             refRound.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    //  Log.d("memo", dataSnapshot.child("Round3:0").child("memo").getValue().toString() + "3Rmemo");
+                      Log.d("memo", dataSnapshot.child("Round3:0").child("memo").getValue().toString() + "3Rmemo");
                     if (dataSnapshot.child("Round3:0").child("memo").getValue().toString() != null) {
                         memo.setText(dataSnapshot.child("Round3:0").child("memo").getValue().toString());
 
@@ -281,7 +291,11 @@ public class RoundDialogFragment extends DialogFragment {
                                 s2.put("r3point", 0);
                                 refP.child("player"+idD).updateChildren(s2);
 
-                                refRound = database.getReference(userId+"/Round/Round2:" + id/2);
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                refRound = database.getReference(userId+"/Round/Round2:" + id);
                             } else {
                                 System.out.println(uu + "---" + dd);
 

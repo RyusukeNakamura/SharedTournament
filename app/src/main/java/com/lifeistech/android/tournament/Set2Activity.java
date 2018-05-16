@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -23,7 +24,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Set2Activity extends AppCompatActivity {
-    String className;
+    String className,sGameName;
     int nullCount = 0;
 
     Intent intent;
@@ -51,7 +52,8 @@ public class Set2Activity extends AppCompatActivity {
         gameN = (TextView) findViewById(R.id.gameN);
         className = intent.getStringExtra("className");
         confirmI.setText(className);
-        gameN.setText(intent.getStringExtra("gameName"));
+        sGameName=intent.getStringExtra("gameName");
+        gameN.setText(sGameName);
 
         editName = new EditText[8];
         editName[0] = (EditText) findViewById(R.id.editName0);
@@ -69,48 +71,88 @@ public class Set2Activity extends AppCompatActivity {
     }
 
     public void createTournament(View v) {
-        DatabaseReference reference = database.getReference(className);
 
-        while (n != editName.length) {
 
-            //editName[]の文字列をランダムにstrings[]に格納
-            Random r = new Random();
-            int value = r.nextInt(editName.length);
-
-            if (strings[value] == null) {
-                if (editName[n].getText().toString().length() != 0) {
-                    strings[value] = editName[n].getText().toString();
-                } else {
-                    nullCount++;
-                    Log.d("editText", "nullCount=" + nullCount);
-                    strings[value] = "bye" + nullCount;
-                }
-                System.out.println(editName[value].toString() + n);
-                n++;
-            }
-        }
+        int nn = 0;
         for (int i = 0; i < editName.length; i++) {
-            reference.child("Status").child("player" + i).setValue(new PlayersStatus(strings[i], 0, 0, 0));
-
-            if (i % 2 == 0) {
-                reference.child("Round").child("Round1:" + i / 2).setValue(new RoundResult(0, 0, "", "", ""));
+            if (editName[i].getText().toString().length() == 0) {
+                nn++;
+                Log.d("nn", "nn=" + nn);
             }
-            if (i % 4 == 0) {
-                reference.child("Round").child("Round2:" + i / 4).setValue(new RoundResult(0, 0, "", "", ""));
-            }
-            if (i % 8 == 0) {
-                reference.child("Round").child("Round3:" + i / 8).setValue(new RoundResult(0, 0, "", "", ""));
-            }
-//            Map<String,String> map=new HashMap<String,String>();
-//            map.put("gameName",)
-//            reference.setValue()
         }
-        intent = new Intent(this, MainActivity.class);
-        intent.putExtra("createdId", className);
-        intent.putExtra("gameName", gameN.getText().toString());
-        intent.putExtra("players",strings);
-        startActivity(intent);
-        finish();
+
+        if (nn > editName.length - 2) {
+            Toast.makeText(getApplicationContext(), "選手名を2人以上入力して下さい", Toast.LENGTH_SHORT).show();
+        } else {
+
+
+            DatabaseReference reference = database.getReference(className);
+
+            int bye = 1;
+
+            //nullならばbyeを挿入する．最低２人はBYEではいけない .length-2
+            for (int i = 0; i < editName.length; i++) {
+                if (editName[i].getText().toString().length() == 0) {
+                    nullCount++;
+                    if (nullCount % 2 == 1) {
+                        strings[bye] = "BYE" + (2 * bye - 1);
+                        Log.d("strings", bye + "," + (2 * bye - 1));
+                    } else {
+                        strings[strings.length - 1 - bye] = "BYE" + 2 * bye;
+                        Log.d("strings", strings.length - 1 - bye + "," + 2 * bye);
+                        bye++;
+                    }
+
+                }
+
+            }
+            Log.d("afterFor", "aaaaaaaaaaaa");
+
+            n = 0;
+            while (n != editName.length - nn) {
+
+                //editName[]の文字列をランダムにstrings[]に格納
+                Random r = new Random();
+                int value = r.nextInt(editName.length);
+
+                //値がなければ格納する．
+                if (strings[value] == null) {
+                    if (editName[n].getText().toString().length() != 0) {
+                        strings[value] = editName[n].getText().toString();
+                        System.out.println(editName[value].getText().toString() + n);
+                        n++;
+                        Log.d("value,n", value + "," + n);
+                    }
+                }
+            }
+
+            //試合名をfirebaseにあげる
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("gameName", sGameName);
+            reference.setValue(map);
+
+            //status, RoundResultを初期化
+            for (int i = 0; i < editName.length; i++) {
+                reference.child("Status").child("player" + i).setValue(new PlayersStatus(strings[i], 0, 0, 0));
+
+                if (i % 2 == 0) {
+                    reference.child("Round").child("Round1:" + i / 2).setValue(new RoundResult(0, 0, "", "", ""));
+                }
+                if (i % 4 == 0) {
+                    reference.child("Round").child("Round2:" + i / 4).setValue(new RoundResult(0, 0, "", "", ""));
+                }
+                if (i % 8 == 0) {
+                    reference.child("Round").child("Round3:" + i / 8).setValue(new RoundResult(0, 0, "", "", ""));
+                }
+
+            }
+            intent = new Intent(this, MainActivity.class);
+            intent.putExtra("createdId", className);
+            intent.putExtra("gameName", sGameName);
+            intent.putExtra("players", strings);
+            startActivity(intent);
+            finish();
+        }
     }
 }
 

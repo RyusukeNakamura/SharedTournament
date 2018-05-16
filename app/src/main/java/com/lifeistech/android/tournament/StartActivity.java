@@ -3,6 +3,7 @@ package com.lifeistech.android.tournament;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 public class StartActivity extends AppCompatActivity {
@@ -20,6 +21,8 @@ public class StartActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void open(View v){
+        Intent intent=new Intent(this,Login_Activity.class);
+        startActivity(intent);
 
     }
 }

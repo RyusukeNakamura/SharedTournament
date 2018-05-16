@@ -23,8 +23,8 @@ dependencies {
     compile 'com.google.firebase:firebase-database:11.8.0'
     def supportLibVersion = '27.1.1'
     compile 'com.android.support:appcompat-v7:' + supportLibVersion
-    compile 'com.android.support:support-v4:'   + supportLibVersion
-    compile 'com.android.support:design:'       + supportLibVersion
+    compile 'com.android.support:support-v4:' + supportLibVersion
+    compile 'com.android.support:design:' + supportLibVersion
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'

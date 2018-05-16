@@ -10,7 +10,8 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <LinearLayout
             android:id="@+id/player"
@@ -109,7 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/ko_def"
+                android:background="@drawable/one_default"
                 android:onClick="round1" />
 
             <ImageView
@@ -122,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/ko_def"
+                android:background="@drawable/one_default"
                 android:onClick="round1" />
 
             <ImageView
@@ -135,7 +136,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/ko_def"
+                android:background="@drawable/one_default"
                 android:onClick="round1" />
 
             <ImageView
@@ -148,7 +149,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/ko_def"
+                android:background="@drawable/one_default"
                 android:onClick="round1" />
 
             <ImageView
@@ -174,7 +175,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/ko_def"
+                android:background="@drawable/two_default"
                 android:onClick="round1"
                 android:scaleType="fitCenter" />
 
@@ -188,7 +189,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/ko_def"
+                android:background="@drawable/two_default"
                 android:onClick="round1" />
 
             <ImageView
@@ -214,7 +215,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/ko_def"
+                android:background="@drawable/three_default"
                 android:onClick="round1" />
 
             <ImageView
