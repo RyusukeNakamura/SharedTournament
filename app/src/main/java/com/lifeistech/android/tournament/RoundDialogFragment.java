@@ -81,6 +81,10 @@ public class RoundDialogFragment extends DialogFragment {
             upPlayer.setText(upP);
             downPlayer.setText(downP);
 
+
+
+
+
             idU=2*id;
             idD=2*id+1;
 
@@ -95,6 +99,8 @@ public class RoundDialogFragment extends DialogFragment {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (Integer.parseInt(dataSnapshot.child("player" + idU).child("r1point").getValue().toString()) != 0) {
                         upScore.setText(dataSnapshot.child("player" + idU).child("r1point").getValue().toString());
+                    }
+                    if (Integer.parseInt(dataSnapshot.child("player" + idD).child("r1point").getValue().toString()) != 0) {
                         downScore.setText(dataSnapshot.child("player" + idD).child("r1point").getValue().toString());
                     }
                 }
@@ -145,8 +151,9 @@ public class RoundDialogFragment extends DialogFragment {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (Integer.parseInt(dataSnapshot.child("player" + idU).child("r2point").getValue().toString()) != 0) {
                         upScore.setText(dataSnapshot.child("player" + idU).child("r2point").getValue().toString());
+                    }
+                    if (Integer.parseInt(dataSnapshot.child("player" + idU).child("r2point").getValue().toString()) != 0) {
                         downScore.setText(dataSnapshot.child("player" + idD).child("r2point").getValue().toString());
-
                     }
                 }
 
@@ -194,6 +201,8 @@ public class RoundDialogFragment extends DialogFragment {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (Integer.parseInt(dataSnapshot.child("player" + idU).child("r3point").getValue().toString()) != 0) {
                         upScore.setText(dataSnapshot.child("player" + idU).child("r3point").getValue().toString());
+                    }
+                    if (Integer.parseInt(dataSnapshot.child("player" + idU).child("r3point").getValue().toString()) != 0) {
                         downScore.setText(dataSnapshot.child("player" + idD).child("r3point").getValue().toString());
                     }
                 }
@@ -271,7 +280,7 @@ public class RoundDialogFragment extends DialogFragment {
                             else if (round == 2) {
                                 System.out.println(uu + "---" + dd);
 
-
+                                Log.d("upPlayer","player"+idU);
                                 Map<String, Object> sender = new HashMap<>();
                                 sender.put("r2point", uScore);
                                 refP.child("player"+idU).updateChildren(sender);
@@ -281,7 +290,7 @@ public class RoundDialogFragment extends DialogFragment {
                                 s.put("r3point", 0);
                                 refP.child("player"+idU).updateChildren(s);
 
-
+                                Log.d("downPlayer","player"+idD);
                                 Map<String, Object> sender2 = new HashMap<>();
                                 sender2.put("r2point", dScore);
                                 refP.child("player"+idD).updateChildren(sender2);

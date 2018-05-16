@@ -176,7 +176,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/two_default"
-                android:onClick="round1"
+                android:onClick="round2"
                 android:scaleType="fitCenter" />
 
             <ImageView
@@ -190,7 +190,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/two_default"
-                android:onClick="round1" />
+                android:onClick="round2" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -216,7 +216,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/three_default"
-                android:onClick="round1" />
+                android:onClick="round3" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -249,7 +249,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="@drawable/line" />
+                    android:src="@drawable/line" />
 
                 <TextView
                     android:layout_width="0dp"

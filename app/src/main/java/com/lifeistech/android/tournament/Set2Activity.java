@@ -24,7 +24,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Set2Activity extends AppCompatActivity {
-    String className,sGameName;
+    String className, sGameName;
     int nullCount = 0;
 
     Intent intent;
@@ -52,7 +52,7 @@ public class Set2Activity extends AppCompatActivity {
         gameN = (TextView) findViewById(R.id.gameN);
         className = intent.getStringExtra("className");
         confirmI.setText(className);
-        sGameName=intent.getStringExtra("gameName");
+        sGameName = intent.getStringExtra("gameName");
         gameN.setText(sGameName);
 
         editName = new EditText[8];
@@ -90,7 +90,7 @@ public class Set2Activity extends AppCompatActivity {
 
             int bye = 1;
 
-            //nullならばbyeを挿入する．最低２人はBYEではいけない .length-2
+            //未記入ならばbyeを挿入する．最低２人はBYEではいけない .
             for (int i = 0; i < editName.length; i++) {
                 if (editName[i].getText().toString().length() == 0) {
                     nullCount++;
@@ -133,16 +133,23 @@ public class Set2Activity extends AppCompatActivity {
 
             //status, RoundResultを初期化
             for (int i = 0; i < editName.length; i++) {
-                reference.child("Status").child("player" + i).setValue(new PlayersStatus(strings[i], 0, 0, 0));
+                int r1 = 0;
+                if (strings[i].indexOf("BYE") != -1) {
+                    r1 = -1;
+                    Log.d("string" + i, "r1=" + r1);
+                }
+                Log.d("string" + i, "r1=" + r1);
+
+                reference.child("Status/player" + i).setValue(new PlayersStatus(strings[i], r1, 0, 0));
 
                 if (i % 2 == 0) {
-                    reference.child("Round").child("Round1:" + i / 2).setValue(new RoundResult(0, 0, "", "", ""));
+                    reference.child("Round/Round1:" + i / 2).setValue(new RoundResult(0, 0, "", "", ""));
                 }
                 if (i % 4 == 0) {
-                    reference.child("Round").child("Round2:" + i / 4).setValue(new RoundResult(0, 0, "", "", ""));
+                    reference.child("Round/Round2:" + i / 4).setValue(new RoundResult(0, 0, "", "", ""));
                 }
                 if (i % 8 == 0) {
-                    reference.child("Round").child("Round3:" + i / 8).setValue(new RoundResult(0, 0, "", "", ""));
+                    reference.child("Round/Round3:" + i / 8).setValue(new RoundResult(0, 0, "", "", ""));
                 }
 
             }

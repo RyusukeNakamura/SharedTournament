@@ -9,16 +9,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <EditText
         android:id="@+id/gameId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="game_id"/>
+        android:hint="game_id"
+        android:singleLine="true" />
+
     <EditText
         android:id="@+id/operatorId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="operator_id"/>
+        android:hint="operator_id"
+        android:singleLine="true" />
 
     <Button
         android:id="@+id/login"
