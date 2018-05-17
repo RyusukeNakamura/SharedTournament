@@ -10,8 +10,8 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        >
+        android:background="@color/colorBackground"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/player"
@@ -28,66 +28,90 @@
 
                 <TextView
                     android:id="@+id/name1"
+                    android:layout_width="match_parent"
                     android:layout_gravity="center"
                     android:layout_rowWeight="1"
+                    android:gravity="center"
                     android:onClick="status"
-                    android:text="1" />
+                    android:text="1"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/name2"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
 
+                    android:layout_gravity="center"
                     android:layout_rowWeight="1"
+                    android:gravity="center"
                     android:onClick="status"
-                    android:text="2" />
+                    android:text="2"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/name3"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
 
+                    android:layout_gravity="center"
                     android:layout_rowWeight="1"
+                    android:gravity="center"
                     android:onClick="status"
-                    android:text="3" />
+                    android:text="3"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/name4"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
 
+                    android:layout_gravity="center"
                     android:layout_rowWeight="1"
+                    android:gravity="center"
                     android:onClick="status"
-                    android:text="4" />
+                    android:text="4"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/name5"
 
+                    android:layout_width="match_parent"
                     android:layout_gravity="center"
                     android:layout_rowWeight="1"
+                    android:gravity="center"
                     android:onClick="status"
-                    android:text="5" />
+                    android:text="5"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/name6"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
 
+                    android:layout_gravity="center"
                     android:layout_rowWeight="1"
+                    android:gravity="center"
                     android:onClick="status"
-                    android:text="6" />
+                    android:text="6"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/name7"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
 
+                    android:layout_gravity="center"
                     android:layout_rowWeight="1"
+                    android:gravity="center"
                     android:onClick="status"
-                    android:text="7" />
+                    android:text="7"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/name8"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
 
+                    android:layout_gravity="center"
                     android:layout_rowWeight="1"
+                    android:gravity="center"
                     android:onClick="status"
-                    android:text="8" />
+                    android:text="8"
+                    android:textSize="18sp" />
 
 
             </GridLayout>
@@ -232,10 +256,17 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <ImageView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/auth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="編集不可" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

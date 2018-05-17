@@ -28,12 +28,13 @@ import java.util.Map;
 public class RoundDialogFragment extends DialogFragment {
     TextView upPlayer, downPlayer;
     EditText upScore, downScore, memo;
-    int id, idU,idD;
+    int id, idU, idD;
     int round = 0;
     String userId, upP, downP;
     String title;
     DatabaseReference refP;
     DatabaseReference refRound;
+    DatabaseReference ref;
 
 
     //firebase 宣言
@@ -55,8 +56,7 @@ public class RoundDialogFragment extends DialogFragment {
         memo = (EditText) layout.findViewById(R.id.memo);
 
         id = getArguments().getInt("id");
-        Log.d("getArguments","id="+id);
-
+        Log.d("getArguments", "id=" + id);
 
 
         System.out.println("r1:" + getArguments().getString("upPlayer") + getArguments().getString("downPlayer"));
@@ -68,6 +68,28 @@ public class RoundDialogFragment extends DialogFragment {
         Log.d("userId", userId);
 
         //EditTextで前回入力した値を取得
+
+        //書き込み権限
+        ref=database.getReference(userId);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child("auth").getValue().equals("writable")){
+                    upScore.setEnabled(true);
+                    downScore.setEnabled(true);
+                    memo.setEnabled(true);
+                }else{
+                    upScore.setEnabled(false);
+                    downScore.setEnabled(false);
+                    memo.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         refP = database.getReference(userId + "/Status");
         refRound = database.getReference(userId + "/Round");
@@ -82,15 +104,10 @@ public class RoundDialogFragment extends DialogFragment {
             downPlayer.setText(downP);
 
 
+            idU = 2 * id;
+            idD = 2 * id + 1;
 
-
-
-            idU=2*id;
-            idD=2*id+1;
-
-            Log.d("1R idU,idD",idU+","+idD);
-
-
+            Log.d("1R idU,idD", idU + "," + idD);
 
 
             //playerStatus
@@ -142,7 +159,7 @@ public class RoundDialogFragment extends DialogFragment {
             idU = getArguments().getInt("imageR2up");
             idD = getArguments().getInt("imageR2down");
 
-            Log.d("2R idU,idD",idU+","+idD);
+            Log.d("2R idU,idD", idU + "," + idD);
 
 
             //playerStatus
@@ -183,7 +200,7 @@ public class RoundDialogFragment extends DialogFragment {
             title = "準決勝";
         } else if (getArguments().getString("upR2winner") != null) {
 
-            Log.d("決勝","dialog");
+            Log.d("決勝", "dialog");
 
             upP = getArguments().getString("upR2winner");
             downP = getArguments().getString("downR2winner");
@@ -192,7 +209,7 @@ public class RoundDialogFragment extends DialogFragment {
 
             idU = getArguments().getInt("imageR3up");
             idD = getArguments().getInt("imageR3down");
-            Log.d("3R idU,idD",idU+","+idD);
+            Log.d("3R idU,idD", idU + "," + idD);
 
 
             //playerStatus
@@ -218,7 +235,7 @@ public class RoundDialogFragment extends DialogFragment {
             refRound.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                      Log.d("memo", dataSnapshot.child("Round3:0").child("memo").getValue().toString() + "3Rmemo");
+                    Log.d("memo", dataSnapshot.child("Round3:0").child("memo").getValue().toString() + "3Rmemo");
                     if (dataSnapshot.child("Round3:0").child("memo").getValue().toString() != null) {
                         memo.setText(dataSnapshot.child("Round3:0").child("memo").getValue().toString());
 
@@ -260,75 +277,76 @@ public class RoundDialogFragment extends DialogFragment {
                             String dd = downPlayer.getText().toString();
                             String mm = memo.getText().toString();
 
-                            Log.d("uu+dd+memo",uu+dd+mm);
+                            Log.d("uu+dd+memo", uu + dd + mm);
 
                             //一回戦, ２選手のスコアを格納
+
+                            Map<String, Object> uSender = new HashMap<>();
+                            Map<String, Object> dSender = new HashMap<>();
 
 
                             if (round == 1) {
 
-                                Log.d("round1 idU,D",""+idU+idD);
-                                PlayersStatus psu = new PlayersStatus(uu, uScore, 0, 0);
-                                refP.child("player"+idU).setValue(psu);
-                                PlayersStatus psd = new PlayersStatus(dd, dScore, 0, 0);
-                                refP.child("player"+idD).setValue(psd);
+                                uSender.put("r1point", uScore);
+                                uSender.put("r2point", 0);
+                                uSender.put("r3point", 0);
 
-                                refRound = database.getReference(userId+"/Round/Round1:" + id);
-                                Log.d("refRound 1R","id="+id);
+                                dSender.put("r1point", dScore);
+                                dSender.put("r2point", 0);
+                                dSender.put("r3point", 0);
+
+                                refRound = database.getReference(userId + "/Round/Round1:" + id);
+                                Log.d("refRound 1R", "id=" + id);
                             }
                             //2回戦. ２選手のスコアを格納child
                             else if (round == 2) {
                                 System.out.println(uu + "---" + dd);
 
-                                Log.d("upPlayer","player"+idU);
-                                Map<String, Object> sender = new HashMap<>();
-                                sender.put("r2point", uScore);
-                                refP.child("player"+idU).updateChildren(sender);
 
-                                //３Rの結果０にする
-                                Map<String, Object> s = new HashMap<>();
-                                s.put("r3point", 0);
-                                refP.child("player"+idU).updateChildren(s);
+                                uSender.put("r2point", uScore);
+                                uSender.put("r3point", 0);
 
-                                Log.d("downPlayer","player"+idD);
-                                Map<String, Object> sender2 = new HashMap<>();
-                                sender2.put("r2point", dScore);
-                                refP.child("player"+idD).updateChildren(sender2);
-
-                                //３Rの結果0にする
-                                Map<String, Object> s2 = new HashMap<>();
-                                s2.put("r3point", 0);
-                                refP.child("player"+idD).updateChildren(s2);
-
-
-
+                                dSender.put("r2point", dScore);
+                                dSender.put("r3point", 0);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                refRound = database.getReference(userId+"/Round/Round2:" + id);
+                                refRound = database.getReference(userId + "/Round/Round2:" + id);
                             } else {
                                 System.out.println(uu + "---" + dd);
 
+                                uSender.put("r3point", uScore);
+                                dSender.put("r3point", dScore);
 
-                                Map<String, Object> sender = new HashMap<>();
-                                sender.put("r3point", uScore);
-                                refP.child("player"+idU).updateChildren(sender);
-
-                                Map<String, Object> sender2 = new HashMap<>();
-                                sender2.put("r3point", dScore);
-                                refP.child("player"+idD).updateChildren(sender2);
-
-                                refRound = database.getReference(userId+"/Round/Round3:0");
+                                refRound = database.getReference(userId + "/Round/Round3:0");
                             }
+
 
                             //RoundResultに結果を格納
                             if (uScore > dScore) {
                                 Snackbar.make(MainActivity.layout, uu + " won", Snackbar.LENGTH_LONG).show();
+
+                                //勝った回数＝round数
+                                uSender.put("winPoint",round);
+                                refP.child("player" + idU).updateChildren(uSender);
+                                //負けたらround-1
+                                dSender.put("winPoint",round-1);
+                                refP.child("player"+idD).updateChildren(dSender);
+
+
                                 RoundResult R = new RoundResult(uScore, dScore, uu, dd, mm);
                                 refRound.setValue(R);
 
 
                             } else if (uScore < dScore) {
                                 Snackbar.make(MainActivity.layout, dd + " won", Snackbar.LENGTH_LONG).show();
+
+                                //負けround-1
+                                uSender.put("winPoint",round-1);
+                                refP.child("player" + idU).updateChildren(uSender);
+                                //勝った回数＝round数
+                                dSender.put("winPoint",round);
+                                refP.child("player"+idD).updateChildren(dSender);
+
                                 RoundResult R = new RoundResult(uScore, dScore, dd, uu, mm);
                                 refRound.setValue(R);
 

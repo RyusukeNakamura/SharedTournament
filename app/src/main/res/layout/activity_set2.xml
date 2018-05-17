@@ -25,18 +25,28 @@
         android:layout_height="wrap_content"
         android:text="ID値"
         android:textSize="20sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
         <TextView
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:text="名前を入力して下さい"
             android:textSize="15sp" />
-
+        <TextView
+            android:id="@+id/participantNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="参加人数"
+            android:textSize="15sp" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/editName0"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="playerName1"
@@ -44,7 +54,7 @@
 
         <EditText
             android:id="@+id/editName1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="playerName2"
@@ -52,7 +62,7 @@
 
         <EditText
             android:id="@+id/editName2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="playerName3"
@@ -60,7 +70,7 @@
 
         <EditText
             android:id="@+id/editName3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="playerName4"
@@ -68,7 +78,7 @@
 
         <EditText
             android:id="@+id/editName4"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="playerName5"
@@ -76,7 +86,7 @@
 
         <EditText
             android:id="@+id/editName5"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="playerName6"
@@ -84,7 +94,7 @@
 
         <EditText
             android:id="@+id/editName6"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="playerName7"
@@ -92,16 +102,16 @@
 
         <EditText
             android:id="@+id/editName7"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="playerName8"
             android:singleLine="true" />
 
         <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:onClick="createTournament"
-            android:text="OK"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:text="OK" />
     </LinearLayout>
 </RelativeLayout>

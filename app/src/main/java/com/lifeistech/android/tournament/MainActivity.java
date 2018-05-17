@@ -9,6 +9,8 @@ import android.support.constraint.solver.widgets.Snapshot;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
@@ -24,8 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Random;
-
+import static java.lang.Integer.getInteger;
 import static java.lang.Integer.parseInt;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     static LinearLayout layout;
+    static  TextView auth;
 
 
     ImageView[] imageR1, imageR2;
@@ -66,17 +68,16 @@ public class MainActivity extends AppCompatActivity {
         Log.d("newCreatedID", str);
         Log.d("gameName", gName);
 
-        //Set2で生成した配列を取得
+        //Set2,Loginで生成した配列を取得
         players = intent.getStringArrayExtra("players");
-        Log.d("players", players[0]);
         Log.d("players", "格納された");
+        Log.d("playersClass", players.getClass().toString());
 
         for (int i = 0; i < players.length; i++) {
             Log.d("playeeeeeeeeeer[]", players[i]);
         }
 
-        DatabaseReference refP = database.getReference(str + "/Status");
-        DatabaseReference refRound = database.getReference(str + "/Round");
+        DatabaseReference ref = database.getReference(str);
 
 
         gridLayout = (GridLayout) findViewById(R.id.gridLayout);
@@ -121,23 +122,24 @@ public class MainActivity extends AppCompatActivity {
         r2Winner = new String[2];
 
 
-        //改善する必要あり４
+        //メソッドに統一したい
 
 
         try {
             //結果を読み込み
 
-            refRound.addValueEventListener(new ValueEventListener() {
+            ref.child("Round").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Log.d("1RonDataChanged", "datasnapshot");
                     for (int i = 0; i < imageR1.length; i++) {
                         //一回戦の結果取得
-                        String w = String.valueOf(dataSnapshot.child("Round1:" + i).child("winner").getValue());
-                        String l = (String) dataSnapshot.child("Round1:" + i).child("loser").getValue();
-                        int upP = parseInt(dataSnapshot.child("Round1:" + i).child("up").getValue().toString());
-                        int downP = parseInt(dataSnapshot.child("Round1:" + i).child("down").getValue().toString());
+                        String w = String.valueOf(dataSnapshot.child("Round1:" + i + "/winner").getValue());
+                        String l = (String) dataSnapshot.child("Round1:" + i + "/loser").getValue();
+                        int upP = parseInt(dataSnapshot.child("Round1:" + i + "/up").getValue().toString());
+                        int downP = parseInt(dataSnapshot.child("Round1:" + i + "/down").getValue().toString());
                         System.out.println("1Rwinner:" + w + "\n1Rloser:" + l);
+
 
                         //勝者を格納
                         if (upP > downP) {
@@ -171,34 +173,35 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-                    for (int j = 0; j < imageR2.length; j++) {
+                    for (int i = 0; i < imageR2.length; i++) {
                         //２回戦の結果取得
-                        String w2 = String.valueOf(dataSnapshot.child("Round2:" + j).child("winner").getValue());
-                        String l2 = (String) dataSnapshot.child("Round2:" + j).child("loser").getValue();
-                        int upP2 = parseInt(dataSnapshot.child("Round2:" + j).child("up").getValue().toString());
-                        int downP2 = parseInt(dataSnapshot.child("Round2:" + j).child("down").getValue().toString());
-                        System.out.println("2Rwinner:" + w2 + "\n2Rloser:" + l2 + "\nj=" + j);
+                        String w2 = String.valueOf(dataSnapshot.child("Round2:" + i + "/winner").getValue());
+                        String l2 = (String) dataSnapshot.child("Round2:" + i + "/loser").getValue();
+                        int upP2 = parseInt(dataSnapshot.child("Round2:" + i + "/up").getValue().toString());
+                        int downP2 = parseInt(dataSnapshot.child("Round2:" + i + "/down").getValue().toString());
+                        System.out.println("2Rwinner:" + w2 + "\n2Rloser:" + l2 + "\nj=" + i);
+
 
                         //勝者を格納
                         if (upP2 > downP2) {
-                            imageR2[j].setBackgroundResource(R.drawable.two_topup);
-                            Log.d("up>down", "r2wwwwwwwwwwwwwWinner" + j + ":" + w2);
-                            r2Winner[j] = w2;
-                            done2R = j;
+                            imageR2[i].setBackgroundResource(R.drawable.two_topup);
+                            Log.d("up>down", "r2wwwwwwwwwwwwwWinner" + i + ":" + w2);
+                            r2Winner[i] = w2;
+                            done2R = i;
                         } else if (upP2 < downP2) {
-                            imageR2[j].setBackgroundResource(R.drawable.two_bottomdown);
-                            Log.d("up<down", "r2Wwwwwwwwwwwwwwwwinner" + j + ":" + w2);
-                            r2Winner[j] = w2;
-                            done2R = j;
+                            imageR2[i].setBackgroundResource(R.drawable.two_bottomdown);
+                            Log.d("up<down", "r2Wwwwwwwwwwwwwwwwinner" + i + ":" + w2);
+                            r2Winner[i] = w2;
+                            done2R = i;
                         }
                         //imageR3の画像変更, ２回戦完了
-                        if (done2R == j) {
-                            if (j == 0) {
+                        if (done2R == i) {
+                            if (i == 0) {
                                 Log.d("imageR3", "changedTopDone");
                                 imageR3.setBackgroundResource(R.drawable.three_top_done);
                                 finalist0 = 1;
                             } else {
-                                Log.d("imageR3", "changedBottomDone" + j);
+                                Log.d("imageR3", "changedBottomDone" + i);
                                 imageR3.setBackgroundResource(R.drawable.three_bottom_done);
                                 finalist1 = 1;
                             }
@@ -209,10 +212,10 @@ public class MainActivity extends AppCompatActivity {
                         }
 
 
-                        String w3 = String.valueOf(dataSnapshot.child("Round3:0").child("winner").getValue());
-                        String l3 = (String) dataSnapshot.child("Round3:0").child("loser").getValue();
-                        int upP3 = parseInt(dataSnapshot.child("Round3:0").child("up").getValue().toString());
-                        int downP3 = parseInt(dataSnapshot.child("Round3:0").child("down").getValue().toString());
+                        String w3 = String.valueOf(dataSnapshot.child("Round3:0/winner").getValue());
+                        String l3 = (String) dataSnapshot.child("Round3:0/loser").getValue();
+                        int upP3 = parseInt(dataSnapshot.child("Round3:0/up").getValue().toString());
+                        int downP3 = parseInt(dataSnapshot.child("Round3:0/down").getValue().toString());
                         System.out.println("3Rwinner:" + w3 + "\n3Rloser:" + l3);
 
                         //勝者を格納
@@ -235,6 +238,54 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            ref.child("Status").addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    Log.d("addChild", dataSnapshot.getValue().toString());
+                    Log.d("addChild", "s=" + s);
+
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    Log.d("changedChild", dataSnapshot.getValue().toString());
+                    Log.d("changedChild", "s=" + s);
+                    Log.d("winPoint", dataSnapshot.child("winPoint").getValue().toString());
+
+                    for (int i = 0; i < players.length; i++) {
+                        if (players[i].equals(dataSnapshot.child("name").getValue().toString())) {
+
+                            switch (Integer.parseInt(dataSnapshot.child("winPoint").getValue().toString())) {
+                                case 1:
+                                    textView[i].setBackgroundColor(Color.parseColor("#F7C4C8"));
+                                    break;
+                                case 2:
+                                    textView[i].setBackgroundColor(Color.parseColor("#F94E87"));
+                                    break;
+                                default:
+                                    break;
+
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -242,30 +293,37 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            refP.addValueEventListener(new
-
-                                               ValueEventListener() {
-                                                   @Override
-                                                   public void onDataChange(DataSnapshot dataSnapshot) {
-//                        System.out.println("r1point=" + dataSnapshot.child(players[2 * j]).child("r1point").getValue());
-//                        System.out.println("r2point=" + dataSnapshot.child(players[2 * j]).child("r2point").getValue());
-//                        System.out.println("r3point=" + dataSnapshot.child(players[2 * j]).child("r3point").getValue());
-//
-//                        System.out.println("r1point=" + dataSnapshot.child(players[2 * j + 1]).child("r1point").getValue());
-//                        System.out.println("r2point=" + dataSnapshot.child(players[2 * j + 1]).child("r2point").getValue());
-//                        System.out.println("r3point=" + dataSnapshot.child(players[2 * j + 1]).child("r3point").getValue());
-                                                   }
-
-                                                   @Override
-                                                   public void onCancelled(DatabaseError databaseError) {
-
-                                                   }
-                                               });
-
 
         } catch (Exception e) {
             Log.d("Status/", "playerはカラ");
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.option_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logIn:
+                Toast.makeText(this, "login", Toast.LENGTH_SHORT).show();
+                DialogFragment dialog2 = new WritableLogin();
+                Bundle args = new Bundle();
+                args.putString("gameId",str);
+                dialog2.setArguments(args);
+                dialog2.show(getFragmentManager(), "writable");
+                Log.d("writeLogin","dialog");
+
+                break;
+            case R.id.result:
+                Toast.makeText(this, "result", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        return true;
     }
 
 
@@ -310,19 +368,11 @@ public class MainActivity extends AppCompatActivity {
 
                     //上から何番目か!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     for (int j = 0; j < players.length; j++) {
-                        System.out.println("r1Winner=" + r1Winner[2 * i]);
-                        System.out.println("r1Winner=" + r1Winner[2 * i + 1]);
-                        Log.d("上から何番目か", "j=" + j + players[j]);
-
-
-                        if (r1Winner[2 * i] == players[j]) {
-                            Log.d("ifをとおっていない可能性", "playssaasdasdasaer" + players[j]);
-
+                        //一度閉じてログインした後，==にすればifに引っかからなくなる．教訓
+                        if (r1Winner[2 * i].equals(players[j])) {
                             args.putInt("imageR2up", j);
                         }
-                        if (r1Winner[2 * i + 1] == players[j]) {
-                            Log.d("r1Winner", "player" + players[j]);
-
+                        if (r1Winner[2 * i + 1].equals(players[j])) {
                             args.putInt("imageR2down", j);
                         }
                     }
@@ -352,12 +402,16 @@ public class MainActivity extends AppCompatActivity {
         if (r2Winner[0] != null && r2Winner[1] != null) {
 
             for (int j = 0; j < players.length; j++) {
-                if (r1Winner[0] == players[j]) {
+                if (r2Winner[0] == players[j]) {
+                    Log.d("r1 r2 0win", "r1=" + r1Winner[0] + "r2=" + r2Winner[0]);
                     args.putInt("imageR3up", j);
                 }
-                if (r1Winner[1] == players[j]) {
+                if (r2Winner[1] == players[j]) {
+                    Log.d("r1 r2 1win", "r1=" + r1Winner[1] + "r2=" + r2Winner[1]);
+
                     args.putInt("imageR3down", j);
                 }
+                Log.d("r1 r2 win", "in for");
 
             }
 

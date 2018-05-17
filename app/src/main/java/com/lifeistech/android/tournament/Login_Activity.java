@@ -15,10 +15,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class Login_Activity extends AppCompatActivity {
-    EditText gameId, operatorId;
+    EditText gameId;
     String gName, gId;
     String[] a;
-    int flag = 0;
 
 
     Intent intent;
@@ -31,7 +30,6 @@ public class Login_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_login_);
 
         gameId = (EditText) findViewById(R.id.gameId);
-        operatorId = (EditText) findViewById(R.id.operatorId);
 
     }
 
@@ -61,7 +59,6 @@ public class Login_Activity extends AppCompatActivity {
                         intent.putExtra("players", a);
                         startActivity(intent);
                     Log.d("gameName",gName);
-                    flag = 1;
                     } catch (Exception e) {
                         Toast.makeText(getApplicationContext(), "そのIDの試合は存在しません", Toast.LENGTH_SHORT).show();
                     }

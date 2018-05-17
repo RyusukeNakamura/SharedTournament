@@ -24,12 +24,12 @@ import java.util.Random;
 import java.util.Set;
 
 public class Set2Activity extends AppCompatActivity {
-    String className, sGameName;
+    String className, sGameName,writePassword;
     int nullCount = 0;
 
     Intent intent;
     ListView listView;
-    TextView confirmI, gameN;
+    TextView confirmI, gameN,participantNumber;
     EditText[] editName;
 
     String[] strings;
@@ -50,10 +50,15 @@ public class Set2Activity extends AppCompatActivity {
 
         confirmI = (TextView) findViewById(R.id.confirmI);
         gameN = (TextView) findViewById(R.id.gameN);
+        participantNumber=(TextView)findViewById(R.id.participantNumber);
+
+
         className = intent.getStringExtra("className");
         confirmI.setText(className);
         sGameName = intent.getStringExtra("gameName");
         gameN.setText(sGameName);
+
+        writePassword=intent.getStringExtra("writePassword");
 
         editName = new EditText[8];
         editName[0] = (EditText) findViewById(R.id.editName0);
@@ -68,10 +73,10 @@ public class Set2Activity extends AppCompatActivity {
         strings = new String[editName.length];
 
 
+
     }
 
     public void createTournament(View v) {
-
 
         int nn = 0;
         for (int i = 0; i < editName.length; i++) {
@@ -129,6 +134,8 @@ public class Set2Activity extends AppCompatActivity {
             //試合名をfirebaseにあげる
             Map<String, String> map = new HashMap<String, String>();
             map.put("gameName", sGameName);
+            map.put("writePassword",writePassword);
+            map.put("auth","readOnly");
             reference.setValue(map);
 
             //status, RoundResultを初期化
@@ -139,8 +146,12 @@ public class Set2Activity extends AppCompatActivity {
                     Log.d("string" + i, "r1=" + r1);
                 }
                 Log.d("string" + i, "r1=" + r1);
+                Log.d("string" + i, strings[i]);
 
-                reference.child("Status/player" + i).setValue(new PlayersStatus(strings[i], r1, 0, 0));
+
+                reference.child("Status").child("player" + i).setValue(new PlayersStatus(strings[i],0, r1, 0, 0));
+
+                Log.d("string" + i, "eeeeeeeee" + r1);
 
                 if (i % 2 == 0) {
                     reference.child("Round/Round1:" + i / 2).setValue(new RoundResult(0, 0, "", "", ""));

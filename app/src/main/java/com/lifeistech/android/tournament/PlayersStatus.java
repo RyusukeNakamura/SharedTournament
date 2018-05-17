@@ -2,25 +2,31 @@ package com.lifeistech.android.tournament;
 
 public class PlayersStatus {
     String name;
-    int r1point;
-    int r2point;
-    int r3point;
+    private int winPoint;
+    private int r1point;
+    private int r2point;
+    private int r3point;
 
-    int wonCount,lostCount;
 
     public PlayersStatus() {
 
     }
 
-    public PlayersStatus(String name, int r1point, int r2point, int r3point) {
+    public PlayersStatus(String name, int winPoint, int r1point, int r2point, int r3point) {
         this.r1point = r1point;
         this.r2point = r2point;
         this.r3point = r3point;
-        this.name=name;
+        this.name = name;
+        this.winPoint = winPoint;
     }
+
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setWinPoint(int winPoint) {
+        this.winPoint = winPoint;
     }
 
     public void setR1point(int r1point) {
@@ -38,6 +44,10 @@ public class PlayersStatus {
 
     public String getName() {
         return name;
+    }
+
+    public int getWinPoint() {
+        return winPoint;
     }
 
     public int getR1point() {

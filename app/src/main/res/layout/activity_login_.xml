@@ -17,13 +17,6 @@
         android:hint="game_id"
         android:singleLine="true" />
 
-    <EditText
-        android:id="@+id/operatorId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="operator_id"
-        android:singleLine="true" />
-
     <Button
         android:id="@+id/login"
         android:layout_width="match_parent"

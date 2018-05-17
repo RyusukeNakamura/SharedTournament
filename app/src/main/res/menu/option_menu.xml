@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/logIn"
+        android:orderInCategory="0"
+        android:title="書き込みログイン" />
+    <item
+        android:id="@+id/result"
+        android:orderInCategory="1"
+        android:title="現在の結果"
+        />
+</menu>
