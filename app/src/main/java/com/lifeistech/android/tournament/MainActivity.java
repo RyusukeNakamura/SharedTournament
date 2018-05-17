@@ -2,10 +2,12 @@ package com.lifeistech.android.tournament;
 
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.provider.ContactsContract;
 import android.support.constraint.solver.widgets.Snapshot;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     static LinearLayout layout;
-    static  TextView auth;
+    TextView auth;
+    static final int requestCodePassword = 0;
 
 
     ImageView[] imageR1, imageR2;
@@ -52,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     int done3R = -1;
 
     int n = 0;
-    int ok = 0;
 
     String str, gName;
 
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        auth=(TextView)findViewById(R.id.auth);
+
         layout = (LinearLayout) findViewById(R.id.linearLayout);
         Intent intent = getIntent();
         str = intent.getStringExtra("createdId");
@@ -68,13 +72,20 @@ public class MainActivity extends AppCompatActivity {
         Log.d("newCreatedID", str);
         Log.d("gameName", gName);
 
+
+        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+       // actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setTitle(gName);
+        actionBar.setSubtitle(str);
+
+
         //Set2,Loginで生成した配列を取得
         players = intent.getStringArrayExtra("players");
-        Log.d("players", "格納された");
         Log.d("playersClass", players.getClass().toString());
 
         for (int i = 0; i < players.length; i++) {
-            Log.d("playeeeeeeeeeer[]", players[i]);
+            Log.d("player[]", players[i]);
         }
 
         DatabaseReference ref = database.getReference(str);
@@ -302,6 +313,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.option_menu, menu);
+
         return true;
     }
 
@@ -309,13 +321,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logIn:
-                Toast.makeText(this, "login", Toast.LENGTH_SHORT).show();
                 DialogFragment dialog2 = new WritableLogin();
+                dialog2.setTargetFragment(null, requestCodePassword);
+
                 Bundle args = new Bundle();
-                args.putString("gameId",str);
+                args.putString("gameId", str);
                 dialog2.setArguments(args);
                 dialog2.show(getFragmentManager(), "writable");
-                Log.d("writeLogin","dialog");
+                Log.d("writeLogin", "dialog");
 
                 break;
             case R.id.result:
@@ -333,6 +346,7 @@ public class MainActivity extends AppCompatActivity {
         DialogFragment dialog = new RoundDialogFragment();
         Bundle args = new Bundle();
         args.putString("userId", str);
+        args.putString("editable",auth.getText().toString());
 
 
         for (int i = 0; i < imageR1.length; i++) {
@@ -356,6 +370,8 @@ public class MainActivity extends AppCompatActivity {
         DialogFragment dialog = new RoundDialogFragment();
         Bundle args = new Bundle();
         args.putString("userId", str);
+        args.putString("editable",auth.getText().toString());
+
 
 
         for (int i = 0; i < imageR2.length; i++) {
@@ -396,6 +412,8 @@ public class MainActivity extends AppCompatActivity {
         DialogFragment dialog = new RoundDialogFragment();
         Bundle args = new Bundle();
         args.putString("userId", str);
+        args.putString("editable",auth.getText().toString());
+
 
 
         System.out.println("firstWinner=");
@@ -438,6 +456,17 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show(getFragmentManager(), "dialog");
                 break;
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == requestCodePassword && resultCode == RESULT_OK) {
+            Log.d("ResultOK", "requestCode=" + requestCodePassword);
+        } else if (requestCode == requestCodePassword && resultCode == RESULT_CANCELED) {
+            Log.d("CanceledRESULT", "requestCode=" + requestCodePassword);
+
+            auth.setText("write/read");
         }
     }
 

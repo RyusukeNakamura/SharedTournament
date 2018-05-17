@@ -20,8 +20,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,11 +28,10 @@ public class RoundDialogFragment extends DialogFragment {
     EditText upScore, downScore, memo;
     int id, idU, idD;
     int round = 0;
-    String userId, upP, downP;
+    String userId, upP, downP,editable;
     String title;
     DatabaseReference refP;
     DatabaseReference refRound;
-    DatabaseReference ref;
 
 
     //firebase 宣言
@@ -66,30 +63,24 @@ public class RoundDialogFragment extends DialogFragment {
 
         userId = getArguments().getString("userId");
         Log.d("userId", userId);
+        editable=getArguments().getString("editable");
 
         //EditTextで前回入力した値を取得
 
         //書き込み権限
-        ref=database.getReference(userId);
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child("auth").getValue().equals("writable")){
-                    upScore.setEnabled(true);
-                    downScore.setEnabled(true);
-                    memo.setEnabled(true);
-                }else{
-                    upScore.setEnabled(false);
-                    downScore.setEnabled(false);
-                    memo.setEnabled(false);
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        if(editable.equals("write/read")){
+            upScore.setEnabled(true);
+            downScore.setEnabled(true);
+            memo.setEnabled(true);
+            Log.d("auth","writable");
+        }else{
+            upScore.setEnabled(false);
+            downScore.setEnabled(false);
+            memo.setEnabled(false);
+            Log.d("auth","disabled");
 
-            }
-        });
+        }
 
         refP = database.getReference(userId + "/Status");
         refRound = database.getReference(userId + "/Round");

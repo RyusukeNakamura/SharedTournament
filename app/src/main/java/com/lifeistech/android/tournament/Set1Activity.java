@@ -89,13 +89,7 @@ public class Set1Activity extends AppCompatActivity implements TextWatcher {
     public void afterTextChanged(Editable s) {
         Log.d("\nafterEditable", s.toString());
 
-        if (s.toString().length() <= 4) {
-            confirmId.setTextColor(Color.RED);
-            confirmId.setText("5文字以上入力して下さい");
-            idLength = 0;
-        }else{
-            idLength=1;
-        }
+        final String s1=s.toString();
 
         DatabaseReference refNew = database.getReference(s.toString());
         refNew.addValueEventListener(new ValueEventListener() {
@@ -108,12 +102,18 @@ public class Set1Activity extends AppCompatActivity implements TextWatcher {
                     confirmId.setText("そのIDはすでに存在します");
                     idFlag = 0;
                 } else {
-                    if (idLength != 0) {
+                    if (s1.length() <= 4) {
+                        confirmId.setTextColor(Color.RED);
+                        confirmId.setText("5文字以上入力して下さい");
+                        idLength = 0;
+                    } else {
                         confirmId.setTextColor(Color.GREEN);
                         confirmId.setText("OK");
                         idFlag = 1;
                     }
                 }
+
+
             }
 
             @Override

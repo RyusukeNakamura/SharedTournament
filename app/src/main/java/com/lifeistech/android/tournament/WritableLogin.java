@@ -1,9 +1,13 @@
 package com.lifeistech.android.tournament;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +29,7 @@ public class WritableLogin extends DialogFragment {
     TextView gText;
     EditText writeLogPassword;
     String gId,wlp;
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -48,19 +53,40 @@ public class WritableLogin extends DialogFragment {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+
+
                         wlp=writeLogPassword.getText().toString();
                         final Map<String,String> map=new HashMap<>();
 
                         reference.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                if(wlp.equals(dataSnapshot.child("writePassword").getValue().toString())){
-                                    Log.d("login","success");
 
-                                    //問題あり，auth以外全部削除されてしまう．
-                                    map.put("auth","writable");
-                                    reference.setValue(map);
-//                                    MainActivity.auth.setText("編集可");
+
+
+
+                                if(wlp.equals(dataSnapshot.child("writePassword").getValue().toString())){
+
+                                    Log.d("login","success");
+                                    Intent result=new Intent();
+                                    if(getTargetFragment()!=null){
+                                        getTargetFragment().onActivityResult(getTargetRequestCode(),MainActivity.RESULT_OK,result);
+                                        Log.d("intent","activityResultOK");
+                                    }else{
+                                        PendingIntent pi=getActivity().createPendingResult(getTargetRequestCode(),result,PendingIntent.FLAG_ONE_SHOT);
+                                        try{
+                                            pi.send(Activity.RESULT_CANCELED);
+                                        }catch (PendingIntent.CanceledException ex){
+                                            ex.printStackTrace();
+                                        }
+                                    }
+                                    Log.d("noPendingIntent","よくわからぬ");
+
+
+
+
+
                                 }else{
                                     Log.d("login","failed");
 
