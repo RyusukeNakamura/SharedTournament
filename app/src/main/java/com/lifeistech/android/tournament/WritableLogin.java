@@ -28,7 +28,7 @@ import java.util.Map;
 public class WritableLogin extends DialogFragment {
     TextView gText;
     EditText writeLogPassword;
-    String gId,wlp;
+    String gId, wlp;
 
 
     @Override
@@ -37,16 +37,15 @@ public class WritableLogin extends DialogFragment {
         View layout = LayoutInflater.from(getActivity())
                 .inflate(R.layout.fragment_write_login, null);
 
-        writeLogPassword=(EditText)layout.findViewById(R.id.writeLogPassword);
-        gText=(TextView)layout.findViewById(R.id.gText);
-        gId= getArguments().getString("gameId");
+        writeLogPassword = (EditText) layout.findViewById(R.id.writeLogPassword);
+        gText = (TextView) layout.findViewById(R.id.gText);
+        gId = getArguments().getString("gameId");
         gText.setText(gId);
-        final FirebaseDatabase database=FirebaseDatabase.getInstance();
-        final DatabaseReference reference=database.getReference(gId);
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference reference = database.getReference(gId);
 
 
-
-        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         return builder.setTitle("結果編集ログイン")
                 .setMessage("パスワードを入力して下さい")
@@ -55,40 +54,44 @@ public class WritableLogin extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
 
 
-
-                        wlp=writeLogPassword.getText().toString();
-                        final Map<String,String> map=new HashMap<>();
+                        wlp = writeLogPassword.getText().toString();
+                        final Map<String, String> map = new HashMap<>();
 
                         reference.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
 
+                                //一度ログインに失敗してからだと落ちない．なぞ．
 
 
-                                if(wlp.equals(dataSnapshot.child("writePassword").getValue().toString())){
+                                if (wlp.equals(dataSnapshot.child("writePassword").getValue().toString())) {
+                                    MainActivity.auth.setText("write/read");
+                                    Toast.makeText(getActivity(),"編集可能になりました!",Toast.LENGTH_LONG);
 
-                                    Log.d("login","success");
-                                    Intent result=new Intent();
-                                    if(getTargetFragment()!=null){
-                                        getTargetFragment().onActivityResult(getTargetRequestCode(),MainActivity.RESULT_OK,result);
-                                        Log.d("intent","activityResultOK");
-                                    }else{
-                                        PendingIntent pi=getActivity().createPendingResult(getTargetRequestCode(),result,PendingIntent.FLAG_ONE_SHOT);
-                                        try{
+
+
+                                    Log.d("login", "success");/*
+                                    Intent result = new Intent();
+
+                                    if (getTargetFragment() != null) {
+                                        getTargetFragment().onActivityResult(getTargetRequestCode(), MainActivity.RESULT_OK, result);
+                                        Log.d("!null", "よくわからぬ");
+
+                                        Log.d("intent", "activityResultOK");
+                                    } else {
+                                        Log.d("null", "よくわからぬ");
+
+                                        try {
+                                            PendingIntent pi = getActivity().createPendingResult(getTargetRequestCode(), result, PendingIntent.FLAG_ONE_SHOT);
                                             pi.send(Activity.RESULT_CANCELED);
-                                        }catch (PendingIntent.CanceledException ex){
+                                        } catch (PendingIntent.CanceledException ex) {
                                             ex.printStackTrace();
                                         }
-                                    }
-                                    Log.d("noPendingIntent","よくわからぬ");
+                                    }*/
 
-
-
-
-
-                                }else{
-                                    Log.d("login","failed");
+                                } else {
+                                    Log.d("login", "failed");
 
                                 }
                             }

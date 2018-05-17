@@ -135,7 +135,6 @@ public class Set2Activity extends AppCompatActivity {
             Map<String, String> map = new HashMap<String, String>();
             map.put("gameName", sGameName);
             map.put("writePassword",writePassword);
-            map.put("auth","readOnly");
             reference.setValue(map);
 
             //status, RoundResultを初期化

@@ -1,0 +1,68 @@
+package com.lifeistech.android.tournament;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ResultNowFragment extends DialogFragment {
+    String[]s;
+    FirebaseDatabase database=FirebaseDatabase.getInstance();
+    int f=0;
+
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+       final Map<String,Integer> map=new HashMap<>();
+
+
+        DatabaseReference reference=database.getReference(getArguments().getString("userId"));
+
+        s=new String[8];
+        s=getArguments().getStringArray("players");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                f=1;
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        Log.d("beforeCollectionsort","ffffffff");
+
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            return builder.setTitle("試合進捗状況")
+                    .setItems(s, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(getActivity(),"clicked",Toast.LENGTH_SHORT);
+                        }
+                    })
+                    .create();
+
+    }
+}
