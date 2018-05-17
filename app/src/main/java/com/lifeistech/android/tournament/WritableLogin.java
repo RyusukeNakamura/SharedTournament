@@ -62,12 +62,10 @@ public class WritableLogin extends DialogFragment {
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                                //一度ログインに失敗してからだと落ちない．なぞ．
-
 
                                 if (wlp.equals(dataSnapshot.child("writePassword").getValue().toString())) {
                                     MainActivity.auth.setText("write/read");
-                                    Toast.makeText(getActivity(),"編集可能になりました!",Toast.LENGTH_LONG);
+//                                    Toast.makeText(getActivity(),"編集可能になりました!",Toast.LENGTH_LONG);
 
 
 

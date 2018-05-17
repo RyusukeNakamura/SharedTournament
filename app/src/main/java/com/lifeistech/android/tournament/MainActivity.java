@@ -266,9 +266,6 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.d("for完了", "ffffffff");
 
-
-
-
                     for (int i = 0; i < players.length; i++) {
                         if (players[i].equals(dataSnapshot.child("player" + i + "/name").getValue().toString())) {
 
@@ -283,8 +280,8 @@ public class MainActivity extends AppCompatActivity {
                                     textView[i].setBackgroundColor(Color.parseColor("#FC3B00"));
                                     break;
                                 default:
+                                    textView[i].setBackgroundColor(Color.parseColor("#FFF5EE"));
                                     break;
-
                             }
                         }
                     }
