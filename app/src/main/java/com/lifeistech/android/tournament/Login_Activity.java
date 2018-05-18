@@ -58,6 +58,7 @@ public class Login_Activity extends AppCompatActivity {
                         intent.putExtra("gameName", gName);
                         intent.putExtra("players", a);
                         startActivity(intent);
+                        finish();
                     Log.d("gameName",gName);
                     } catch (Exception e) {
                         Toast.makeText(getApplicationContext(), "そのIDの試合は存在しません", Toast.LENGTH_SHORT).show();

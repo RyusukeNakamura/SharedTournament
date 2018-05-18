@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -290,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < players.length; i++) {
                         int n = Integer.parseInt(dataSnapshot.child("player" + i + "/winPoint").getValue().toString());
                         Log.d("int n", "n=" + n);
-                        winp.add("best" + (int) (players.length / (Math.pow(2, n))) + "       " + players[i]);
+                        winp.add("best " + (int) (players.length / (Math.pow(2, n))) + "       " + players[i]);
                     }
                     Collections.sort(winp);
                     System.out.println(winp);
@@ -339,7 +340,15 @@ public class MainActivity extends AppCompatActivity {
                 argument.putStringArray("players", winp.toArray(new String[0]));
                 dialogFragment.setArguments(argument);
                 dialogFragment.show(getFragmentManager(), "result");
-
+                break;
+            case R.id.dispose:
+                try {
+                    finish();
+                    /*DatabaseReference ref = database.getReference(str);
+                    ref.removeValue();*/
+                } catch (Exception e) {
+                    Log.d("dipose", "error??");
+                }
                 break;
         }
 
@@ -465,5 +474,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    int back = 0;
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // 戻るボタンの処理
+            // 編集しているときにメモボタンを押したときは警告をする
+            Snackbar.make(layout, "破棄します．よろしいですか", Snackbar.LENGTH_LONG).setAction("YES", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("Snackbar.onClick", "YES Clicked");
+/*
+                            database.getReference(str).removeValue();
+*/
+
+                    finish();
+                }
+            }).show();
+
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

@@ -24,45 +24,31 @@ import java.util.List;
 import java.util.Map;
 
 public class ResultNowFragment extends DialogFragment {
-    String[]s;
-    FirebaseDatabase database=FirebaseDatabase.getInstance();
-    int f=0;
+    String[] s;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-       final Map<String,Integer> map=new HashMap<>();
+        final Map<String, Integer> map = new HashMap<>();
 
 
-        DatabaseReference reference=database.getReference(getArguments().getString("userId"));
+        DatabaseReference reference = database.getReference(getArguments().getString("userId"));
 
-        s=new String[8];
-        s=getArguments().getStringArray("players");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        s = new String[8];
+        s = getArguments().getStringArray("players");
+        Log.d("beforeCollectionsort", "ffffffff");
 
-                f=1;
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-            }
-        });
-        Log.d("beforeCollectionsort","ffffffff");
-
-
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-            return builder.setTitle("試合進捗状況")
-                    .setItems(s, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(getActivity(),"clicked",Toast.LENGTH_SHORT);
-                        }
-                    })
-                    .create();
+        return builder.setTitle("試合進捗状況")
+                .setItems(s, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getActivity(), "clicked", Toast.LENGTH_SHORT);
+                    }
+                })
+                .create();
 
     }
 }
