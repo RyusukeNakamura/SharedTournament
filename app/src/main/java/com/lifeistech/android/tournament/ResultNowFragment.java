@@ -34,7 +34,6 @@ public class ResultNowFragment extends DialogFragment {
 
 
         DatabaseReference reference = database.getReference(getArguments().getString("userId"));
-
         s = new String[8];
         s = getArguments().getStringArray("players");
         Log.d("beforeCollectionsort", "ffffffff");

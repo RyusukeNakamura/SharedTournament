@@ -80,6 +80,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d("newCreatedID", str);
         Log.d("gameName", gName);
 
+        //一人１トーナメント各自で作れる．あとで新しくつくるとき消すように保存．
+        SharedPreferences pref=getSharedPreferences("disposeValue",MODE_PRIVATE);
+        SharedPreferences.Editor editor=pref.edit();
+        editor.putString("dispose",str);
+        editor.commit();
+
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(gName);
@@ -488,7 +494,6 @@ public class MainActivity extends AppCompatActivity {
 /*
                             database.getReference(str).removeValue();
 */
-
                     finish();
                 }
             }).show();
