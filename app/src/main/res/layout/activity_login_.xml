@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login_Activity">
+    tools:context="com.lifeistech.android.sharedtournament.Login_Activity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             android:id="@+id/gameId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="game_id"
+            android:hint="Game_ID"
             android:singleLine="true" />
 
         <Button
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="login"
-            android:text="LOGIN" />
+            android:text="ログイン" />
 
     </LinearLayout>
 

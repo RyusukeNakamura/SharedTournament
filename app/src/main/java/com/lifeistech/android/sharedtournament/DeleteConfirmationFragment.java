@@ -1,4 +1,4 @@
-package com.lifeistech.android.tournament;
+package com.lifeistech.android.sharedtournament;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class DeleteConfirmationFragment extends DialogFragment {

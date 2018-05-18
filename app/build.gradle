@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.lifeistech.android.tournament"
+        applicationId "com.lifeistech.android.sharedtournament"
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
@@ -20,6 +20,9 @@ android {
 
 dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
+//    implementation 'com.google.firebase:firebase-database:14.0.0'
+    implementation 'com.google.firebase:firebase-database:11.8.0'
+//    compile 'com.google.firebase:firebase-core:15.0.2'
     compile 'com.google.firebase:firebase-core:11.8.0'
     compile 'com.google.firebase:firebase-database:11.8.0'
     def supportLibVersion = '27.1.1'

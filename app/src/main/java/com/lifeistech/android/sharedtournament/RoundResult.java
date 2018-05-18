@@ -1,4 +1,4 @@
-package com.lifeistech.android.tournament;
+package com.lifeistech.android.sharedtournament;
 
 public class RoundResult {
     public RoundResult() {

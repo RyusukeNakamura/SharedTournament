@@ -1,29 +1,26 @@
-package com.lifeistech.android.tournament;
+package com.lifeistech.android.sharedtournament;
 
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
-import android.provider.ContactsContract;
-import android.support.constraint.solver.widgets.Snapshot;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static java.lang.Integer.getInteger;
 import static java.lang.Integer.parseInt;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     ImageView[] imageR1, imageR2;
-    ImageView imageR3, firstWinner;
+    ImageView imageR3, firstWinner, authImage;
     GridLayout gridLayout;
     TextView[] textView;
 
@@ -61,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     int done1R = -1;
     int done2R = -1;
     int done3R = -1;
+    public static int logOnOff = 0;
 
     int n = 0;
 
@@ -81,15 +78,13 @@ public class MainActivity extends AppCompatActivity {
         Log.d("gameName", gName);
 
         //一人１トーナメント各自で作れる．あとで新しくつくるとき消すように保存．
-        SharedPreferences pref=getSharedPreferences("disposeValue",MODE_PRIVATE);
-        SharedPreferences.Editor editor=pref.edit();
-        editor.putString("dispose",str);
-        editor.commit();
 
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(gName);
+
+        final ActionBar actionBar = getSupportActionBar();
         actionBar.setSubtitle(str);
+        actionBar.setIcon(R.drawable.read_only);
+        actionBar.setTitle(gName);
 
 
         //Set2,Loginで生成した配列を取得
@@ -140,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
         firstWinner = (ImageView) findViewById(R.id.firstWinner);
 
 
+
         r1Winner = new String[4];
         r2Winner = new String[2];
 
@@ -153,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
             ref.child("Round").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.d("1RonDataChanged", "datasnapshot");
                     for (int i = 0; i < imageR1.length; i++) {
                         //一回戦の結果取得
                         String w = String.valueOf(dataSnapshot.child("Round1:" + i + "/winner").getValue());
@@ -207,12 +202,12 @@ public class MainActivity extends AppCompatActivity {
                         //勝者を格納
                         if (upP2 > downP2) {
                             imageR2[i].setBackgroundResource(R.drawable.two_topup);
-                            Log.d("up>down", "r2wwwwwwwwwwwwwWinner" + i + ":" + w2);
+                            Log.d("up>down", "r2 Winner" + i + ":" + w2);
                             r2Winner[i] = w2;
                             done2R = i;
                         } else if (upP2 < downP2) {
                             imageR2[i].setBackgroundResource(R.drawable.two_bottomdown);
-                            Log.d("up<down", "r2Wwwwwwwwwwwwwwwwinner" + i + ":" + w2);
+                            Log.d("up<down", "r2 Winner" + i + ":" + w2);
                             r2Winner[i] = w2;
                             done2R = i;
                         }
@@ -270,7 +265,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    Log.d("for完了", "ffffffff");
 
                     for (int i = 0; i < players.length; i++) {
                         if (players[i].equals(dataSnapshot.child("player" + i + "/name").getValue().toString())) {
@@ -295,8 +289,7 @@ public class MainActivity extends AppCompatActivity {
 
                     for (int i = 0; i < players.length; i++) {
                         int n = Integer.parseInt(dataSnapshot.child("player" + i + "/winPoint").getValue().toString());
-                        Log.d("int n", "n=" + n);
-                        winp.add("best " + (int) (players.length / (Math.pow(2, n))) + "       " + players[i]);
+                        winp.add("ベスト " + (int) (players.length / (Math.pow(2, n))) + "       " + players[i]);
                     }
                     Collections.sort(winp);
                     System.out.println(winp);
@@ -323,39 +316,61 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             //WriteLogIn
             case R.id.logIn:
-                DialogFragment dialog2 = new WritableLogin();
-                dialog2.setTargetFragment(null, requestCodePassword);
-                Bundle args = new Bundle();
-                args.putString("gameId", str);
-                dialog2.setArguments(args);
-                dialog2.show(getFragmentManager(), "writable");
-                Log.d("writeLogin", "dialog");
+                if(logOnOff==0) {
+                    DialogFragment dialog = new WritableLogin();
+                    Bundle args = new Bundle();
+                    args.putString("gameId", str);
+                    dialog.setArguments(args);
+                    dialog.show(getFragmentManager(), "writable");
+                }else if(logOnOff==1){
+                    DialogFragment dialog2 = new UnableWriteFragment();
+                    dialog2.show(getFragmentManager(), "logOff");
+                }
+
+                auth.addTextChangedListener(new TextWatcher() {
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+
+                        final MenuItem menuItem = item;
+
+                        menuItem.setIcon(R.drawable.writeread);
+                        logOnOff=1;
+                    }
+                });
+
                 break;
             //ResultNow
             case R.id.result:
 
-                Toast.makeText(this, "result", Toast.LENGTH_SHORT).show();
                 DialogFragment dialogFragment = new ResultNowFragment();
                 Bundle argument = new Bundle();
                 argument.putString("userId", str);
                 argument.putStringArray("players", winp.toArray(new String[0]));
                 dialogFragment.setArguments(argument);
                 dialogFragment.show(getFragmentManager(), "result");
+
                 break;
             case R.id.dispose:
-                try {
-                    finish();
-                    /*DatabaseReference ref = database.getReference(str);
-                    ref.removeValue();*/
-                } catch (Exception e) {
-                    Log.d("dipose", "error??");
-                }
-                break;
+                finish();
         }
+
+
 
         return true;
     }
@@ -463,23 +478,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-
-    public void status(View v) {
-        for (int i = 0; i < textView.length; i++) {
-            if (v == textView[i]) {
-                DialogFragment dialog = new MyDialogFragment();
-
-                Bundle args = new Bundle();
-                args.putString("player", textView[i].getText().toString());
-                dialog.setArguments(args);
-                dialog.show(getFragmentManager(), "dialog");
-                break;
-            }
-        }
-    }
-
-    int back = 0;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

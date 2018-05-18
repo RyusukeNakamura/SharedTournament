@@ -1,18 +1,16 @@
-package com.lifeistech.android.tournament;
+package com.lifeistech.android.sharedtournament;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -61,7 +59,7 @@ public class RoundDialogFragment extends DialogFragment {
 
 
         //書き込み権限
-        if(editable.equals("write/read")){
+        if(editable.equals("編集可能")){
             upScore.setEnabled(true);
             downScore.setEnabled(true);
             memo.setEnabled(true);

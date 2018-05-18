@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.lifeistech.android.tournament">
+    package="com.lifeistech.android.sharedtournament">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -17,17 +17,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".StartActivity">
+        <activity android:name="com.lifeistech.android.sharedtournament.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".Set1Activity" />
-        <activity android:name=".Set2Activity" />
-        <activity android:name=".Login_Activity"></activity>
+        <activity android:name="com.lifeistech.android.sharedtournament.MainActivity" />
+        <activity android:name="com.lifeistech.android.sharedtournament.Set1Activity" />
+        <activity android:name="com.lifeistech.android.sharedtournament.Set2Activity" />
+        <activity android:name="com.lifeistech.android.sharedtournament.Login_Activity"></activity>
     </application>
 
 </manifest>

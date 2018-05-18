@@ -1,20 +1,16 @@
-package com.lifeistech.android.tournament;
+package com.lifeistech.android.sharedtournament;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +30,7 @@ public class WritableLogin extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        View layout = LayoutInflater.from(getActivity())
+        final View layout = LayoutInflater.from(getActivity())
                 .inflate(R.layout.fragment_write_login, null);
 
         writeLogPassword = (EditText) layout.findViewById(R.id.writeLogPassword);
@@ -62,34 +58,14 @@ public class WritableLogin extends DialogFragment {
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-
                                 if (wlp.equals(dataSnapshot.child("writePassword").getValue().toString())) {
-                                    MainActivity.auth.setText("write/read");
-//                                    Toast.makeText(getActivity(),"編集可能になりました!",Toast.LENGTH_LONG);
-
-
-
-                                    Log.d("login", "success");/*
-                                    Intent result = new Intent();
-
-                                    if (getTargetFragment() != null) {
-                                        getTargetFragment().onActivityResult(getTargetRequestCode(), MainActivity.RESULT_OK, result);
-                                        Log.d("!null", "よくわからぬ");
-
-                                        Log.d("intent", "activityResultOK");
-                                    } else {
-                                        Log.d("null", "よくわからぬ");
-
-                                        try {
-                                            PendingIntent pi = getActivity().createPendingResult(getTargetRequestCode(), result, PendingIntent.FLAG_ONE_SHOT);
-                                            pi.send(Activity.RESULT_CANCELED);
-                                        } catch (PendingIntent.CanceledException ex) {
-                                            ex.printStackTrace();
-                                        }
-                                    }*/
+                                    MainActivity.auth.setText("編集可能");
+                                    Snackbar.make(MainActivity.layout, "編集可能になりました!", Snackbar.LENGTH_LONG).show();
 
                                 } else {
                                     Log.d("login", "failed");
+                                    Snackbar.make(MainActivity.layout, "パスワードが違います", Snackbar.LENGTH_LONG).show();
+
 
                                 }
                             }

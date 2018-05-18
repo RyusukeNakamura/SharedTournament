@@ -1,16 +1,16 @@
 {
   "project_info": {
-    "project_number": "372132364146",
-    "firebase_url": "https://tournament-ed000.firebaseio.com",
-    "project_id": "tournament-ed000",
-    "storage_bucket": "tournament-ed000.appspot.com"
+    "project_number": "962250116791",
+    "firebase_url": "https://sharedtournament.firebaseio.com",
+    "project_id": "sharedtournament",
+    "storage_bucket": "sharedtournament.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:372132364146:android:b53c498cb8882815",
+        "mobilesdk_app_id": "1:962250116791:android:7e6797a12cba962e",
         "android_client_info": {
-          "package_name": "com.lifeistech.android.tournament"
+          "package_name": "com.lifeistech.android.sharedtournament"
         }
       },
       "oauth_client": [

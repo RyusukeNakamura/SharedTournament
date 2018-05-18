@@ -19,8 +19,9 @@
             android:id="@+id/upScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:hint="0"/>
+            android:hint="0"
+            android:inputType="number"
+            android:singleLine="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -38,8 +39,9 @@
             android:id="@+id/downScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:hint="0" />
+            android:hint="0"
+            android:inputType="number"
+            android:singleLine="true" />
     </LinearLayout>
 
     <EditText
@@ -48,6 +50,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/colorBackground"
-        android:hint="memo" />
+        android:hint="memo"
+        android:inputType="number" />
 
 </LinearLayout>

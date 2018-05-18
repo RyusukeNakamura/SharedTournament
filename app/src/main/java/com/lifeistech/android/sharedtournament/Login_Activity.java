@@ -1,6 +1,5 @@
-package com.lifeistech.android.tournament;
+package com.lifeistech.android.sharedtournament;
 
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;

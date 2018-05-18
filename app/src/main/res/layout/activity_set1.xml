@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Set1Activity">
+    tools:context="com.lifeistech.android.sharedtournament.Set1Activity">
 
     <LinearLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorBackground"
         android:orientation="vertical">
 
         <LinearLayout
@@ -20,13 +21,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="・大会名を決めて下さい    " />
+                android:text="・大会名を決めて下さい    "
+                android:textColor="@color/colorPrimary"
+                android:textSize="16dp" />
 
             <EditText
                 android:id="@+id/gameName"
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:hint="大会名"
                 android:singleLine="true" />
         </LinearLayout>
@@ -39,7 +42,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="・IDを決めて下さい(5文字以上半角英数字)" />
+                android:text="・IDを決めて下さい(5文字以上半角英数字)"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16dp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -47,17 +53,18 @@
 
             <EditText
                 android:id="@+id/id"
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:hint="ID"
-                android:singleLine="true"
-                android:inputType="textVisiblePassword"/>
+                android:inputType="textVisiblePassword"
+                android:singleLine="true" />
+
             <TextView
                 android:id="@+id/confirmId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center" />
         </LinearLayout>
 
         <LinearLayout
@@ -68,7 +75,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="・パスワードを決めてください(5文字以上半角英数字)" />
+                android:text="・パスワードを決めて下さい(5文字以上半角英数字)"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16dp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -76,23 +86,26 @@
 
             <EditText
                 android:id="@+id/password"
-                android:layout_gravity="center"
-                android:hint="password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textVisiblePassword"/>
+                android:layout_gravity="center"
+                android:hint="password"
+                android:inputType="textVisiblePassword" />
+
             <TextView
                 android:id="@+id/confirmPass"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center" />
         </LinearLayout>
 
         <Button
-            android:onClick="newCreate"
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:background="@color/colorPrimary"
+            android:onClick="newCreate"
+            android:text="Button"
+            android:textColor="@color/colorBackground" />
     </LinearLayout>
 </RelativeLayout>

@@ -1,13 +1,12 @@
-package com.lifeistech.android.tournament;
+package com.lifeistech.android.sharedtournament;
 
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,12 +15,9 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 public class Set2Activity extends AppCompatActivity {
     String className, sGameName,writePassword;
@@ -48,15 +44,12 @@ public class Set2Activity extends AppCompatActivity {
 
         intent = getIntent();
 
-        confirmI = (TextView) findViewById(R.id.confirmI);
-        gameN = (TextView) findViewById(R.id.gameN);
-        participantNumber=(TextView)findViewById(R.id.participantNumber);
-
-
         className = intent.getStringExtra("className");
-        confirmI.setText(className);
         sGameName = intent.getStringExtra("gameName");
-        gameN.setText(sGameName);
+
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setSubtitle(className);
+        actionBar.setTitle(sGameName);
 
         writePassword=intent.getStringExtra("writePassword");
 
@@ -86,8 +79,8 @@ public class Set2Activity extends AppCompatActivity {
             }
         }
 
-        if (nn > editName.length - 2) {
-            Toast.makeText(getApplicationContext(), "選手名を2人以上入力して下さい", Toast.LENGTH_SHORT).show();
+        if (nn > editName.length -4) {
+            Toast.makeText(getApplicationContext(), "選手名を4人以上入力して下さい", Toast.LENGTH_SHORT).show();
         } else {
 
 
@@ -95,7 +88,7 @@ public class Set2Activity extends AppCompatActivity {
 
             int bye = 1;
 
-            //未記入ならばbyeを挿入する．最低２人はBYEではいけない .
+            //未記入ならばbyeを挿入する．最低4人はBYEではいけない .
             for (int i = 0; i < editName.length; i++) {
                 if (editName[i].getText().toString().length() == 0) {
                     nullCount++;
@@ -163,6 +156,12 @@ public class Set2Activity extends AppCompatActivity {
                 }
 
             }
+            //ユーザの端末にid名を保存
+            SharedPreferences pref = getSharedPreferences("disposeValue", MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("dispose", className);
+            editor.commit();
+
             intent = new Intent(this, MainActivity.class);
             intent.putExtra("createdId", className);
             intent.putExtra("gameName", sGameName);

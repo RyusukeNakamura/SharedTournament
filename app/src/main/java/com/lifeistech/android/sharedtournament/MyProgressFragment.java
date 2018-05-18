@@ -1,4 +1,4 @@
-package com.lifeistech.android.tournament;
+package com.lifeistech.android.sharedtournament;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -10,7 +10,7 @@ public class MyProgressFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         prog=new ProgressDialog(getActivity());
-        prog.setMessage("処理中");
+        prog.setMessage("読み込み中...");
         prog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         return prog;
     }

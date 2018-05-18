@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/logIn"
-        android:orderInCategory="0"
-        android:title="書き込みログイン" />
+        android:orderInCategory="2"
+        android:icon="@drawable/read_only"
+        android:title="log in"
+        app:showAsAction="always"
+         />
+
+
     <item
         android:id="@+id/result"
         android:orderInCategory="1"
-        android:title="現在の結果"
+        android:icon="@drawable/result"
+        android:title="result"
+        app:showAsAction="always"
         />
     <item
         android:id="@+id/dispose"
-        android:orderInCategory="1"
-        android:title="ホームに戻る"
+        android:title="home"
+        android:orderInCategory="0"
+        android:icon="@drawable/home"
+        app:showAsAction="always"
         />
 
 </menu>

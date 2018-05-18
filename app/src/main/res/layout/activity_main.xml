@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.lifeistech.android.sharedtournament.MainActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -262,18 +262,13 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.5"
-                    android:src="@drawable/read_only" />
 
                 <TextView
                     android:id="@+id/auth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="read only"
+                    android:text="編集不可"
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp" />
             </LinearLayout>

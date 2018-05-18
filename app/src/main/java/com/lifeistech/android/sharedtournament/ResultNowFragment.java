@@ -1,4 +1,4 @@
-package com.lifeistech.android.tournament;
+package com.lifeistech.android.sharedtournament;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -36,7 +36,6 @@ public class ResultNowFragment extends DialogFragment {
         DatabaseReference reference = database.getReference(getArguments().getString("userId"));
         s = new String[8];
         s = getArguments().getStringArray("players");
-        Log.d("beforeCollectionsort", "ffffffff");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -44,7 +43,6 @@ public class ResultNowFragment extends DialogFragment {
                 .setItems(s, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getActivity(), "clicked", Toast.LENGTH_SHORT);
                     }
                 })
                 .create();
