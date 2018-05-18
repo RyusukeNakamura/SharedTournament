@@ -33,14 +33,10 @@ public class RoundDialogFragment extends DialogFragment {
     DatabaseReference refP;
     DatabaseReference refRound;
 
-
-    //firebase 宣言
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
 
         //カスタムダイアログのViewを取得
         View layout = LayoutInflater.from(getActivity())
@@ -55,20 +51,16 @@ public class RoundDialogFragment extends DialogFragment {
         id = getArguments().getInt("id");
         Log.d("getArguments", "id=" + id);
 
-
         System.out.println("r1:" + getArguments().getString("upPlayer") + getArguments().getString("downPlayer"));
         System.out.println("r2:" + getArguments().getString("downR1winner") + getArguments().getString("upR1winner"));
         System.out.println("r3:" + getArguments().getString("downR2winner") + getArguments().getString("upR2winner"));
-
 
         userId = getArguments().getString("userId");
         Log.d("userId", userId);
         editable=getArguments().getString("editable");
 
-        //EditTextで前回入力した値を取得
 
         //書き込み権限
-
         if(editable.equals("write/read")){
             upScore.setEnabled(true);
             downScore.setEnabled(true);
@@ -79,9 +71,10 @@ public class RoundDialogFragment extends DialogFragment {
             downScore.setEnabled(false);
             memo.setEnabled(false);
             Log.d("auth","disabled");
-
         }
 
+
+        //EditTextで前回入力した値を取得
         refP = database.getReference(userId + "/Status");
         refRound = database.getReference(userId + "/Round");
 
@@ -93,6 +86,13 @@ public class RoundDialogFragment extends DialogFragment {
             downP = getArguments().getString("downPlayer");
             upPlayer.setText(upP);
             downPlayer.setText(downP);
+
+            if(upP.indexOf("BYE")!=-1){
+                upScore.setEnabled(false);
+            }
+            if(downP.indexOf("BYE")!=-1){
+                downScore.setEnabled(false);
+            }
 
 
             idU = 2 * id;

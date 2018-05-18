@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < textView.length; i++) {
             if (players[i].indexOf("BYE") != -1) {
                 textView[i].setTextColor(Color.parseColor("#D3D3D3"));
-
                 Log.d("matches", "bye");
             } else {
                 textView[i].setTextColor(Color.parseColor("#000000"));
@@ -487,13 +486,9 @@ public class MainActivity extends AppCompatActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             // 戻るボタンの処理
             // 編集しているときにメモボタンを押したときは警告をする
-            Snackbar.make(layout, "破棄します．よろしいですか", Snackbar.LENGTH_LONG).setAction("YES", new View.OnClickListener() {
+            Snackbar.make(layout, "終了しますか？（データは保存されています）", Snackbar.LENGTH_LONG).setAction("YES", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("Snackbar.onClick", "YES Clicked");
-/*
-                            database.getReference(str).removeValue();
-*/
                     finish();
                 }
             }).show();

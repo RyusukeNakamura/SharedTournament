@@ -1,6 +1,9 @@
 package com.lifeistech.android.tournament;
 
+import android.app.DialogFragment;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +22,10 @@ public class Login_Activity extends AppCompatActivity {
     String gName, gId;
     String[] a;
 
+    MyProgressFragment dialog;
+     Handler handler;
+    Thread t;
+
 
     Intent intent;
 
@@ -31,23 +38,59 @@ public class Login_Activity extends AppCompatActivity {
 
         gameId = (EditText) findViewById(R.id.gameId);
 
+        handler=new Handler(){
+            @Override
+            public void handleMessage(Message msg){
+                switch (msg.what){
+                    case 1:
+                        dialog.setProgress(dialog.getProgress()+1);
+                        break;
+                    case 0:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+
+
+
     }
 
     public void login(View view) {
         a = new String[8];
         gId = gameId.getText().toString();
 
+        dialog=new MyProgressFragment();
+        dialog.show(getFragmentManager(),"progress");
+
+        t=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i=0;i<100;i++){
+                    handler.sendEmptyMessage(1);
+                    try{
+                        Thread.sleep(50);
+                    }catch(InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+                handler.sendEmptyMessage(0);
+            }
+        });
+        t.start();
+
 
 
             DatabaseReference ref = database.getReference(gId);
-            Log.d("ref", "OK");
 
 
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     try {
-                    for (int i = 0; i < a.length; i++) {
+
+
+                        for (int i = 0; i < a.length; i++) {
                         a[i] = dataSnapshot.child("Status/player" + i + "/name").getValue().toString();
                         Log.d("player" + i, a[i]);
                     }
@@ -76,6 +119,14 @@ public class Login_Activity extends AppCompatActivity {
 
 
 
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        if(dialog!=null){
+            dialog.dismiss();
+        }
+        t=null;
     }
 
 }

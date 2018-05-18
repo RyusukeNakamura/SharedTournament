@@ -258,14 +258,24 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:src="@drawable/read_only" />
 
                 <TextView
                     android:id="@+id/auth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="read only" />
+                    android:layout_weight="1"
+                    android:text="read only"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -277,7 +287,7 @@
                 <ImageView
                     android:id="@+id/firstWinner"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:src="@drawable/line" />
@@ -287,7 +297,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="優勝" />
+                    android:text="優勝"
+                    android:textColor="@color/colorPrimary" />
             </LinearLayout>
 
             <ImageView

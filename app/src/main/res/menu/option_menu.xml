@@ -13,7 +13,7 @@
     <item
         android:id="@+id/dispose"
         android:orderInCategory="1"
-        android:title="破棄"
+        android:title="ホームに戻る"
         />
 
 </menu>
