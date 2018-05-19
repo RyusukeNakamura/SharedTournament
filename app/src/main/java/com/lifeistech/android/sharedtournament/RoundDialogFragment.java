@@ -249,7 +249,6 @@ public class RoundDialogFragment extends DialogFragment {
 
         //ダイアログの設定---------------------------------------------------------------------------
         return builder.setTitle(title)
-                .setIcon(R.drawable.ic_launcher_background)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
