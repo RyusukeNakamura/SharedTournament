@@ -22,7 +22,7 @@ public class Login_Activity extends AppCompatActivity {
     String[] a;
 
     MyProgressFragment dialog;
-     Handler handler;
+    Handler handler;
     Thread t;
 
 
@@ -37,12 +37,12 @@ public class Login_Activity extends AppCompatActivity {
 
         gameId = (EditText) findViewById(R.id.gameId);
 
-        handler=new Handler(){
+        handler = new Handler() {
             @Override
-            public void handleMessage(Message msg){
-                switch (msg.what){
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
                     case 1:
-                        dialog.setProgress(dialog.getProgress()+1);
+                        dialog.setProgress(dialog.getProgress() + 1);
                         break;
                     case 0:
                         dialog.dismiss();
@@ -52,24 +52,23 @@ public class Login_Activity extends AppCompatActivity {
         };
 
 
-
     }
 
     public void login(View view) {
         a = new String[8];
         gId = gameId.getText().toString();
 
-        dialog=new MyProgressFragment();
-        dialog.show(getFragmentManager(),"progress");
+        dialog = new MyProgressFragment();
+        dialog.show(getFragmentManager(), "progress");
 
-        t=new Thread(new Runnable() {
+        t = new Thread(new Runnable() {
             @Override
             public void run() {
-                for(int i=0;i<100;i++){
+                for (int i = 0; i < 100; i++) {
                     handler.sendEmptyMessage(1);
-                    try{
+                    try {
                         Thread.sleep(50);
-                    }catch(InterruptedException e){
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
@@ -79,53 +78,52 @@ public class Login_Activity extends AppCompatActivity {
         t.start();
 
 
-
-            DatabaseReference ref = database.getReference(gId);
-
-
-            ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    try {
+        DatabaseReference ref = database.getReference(gId);
 
 
-                        for (int i = 0; i < a.length; i++) {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                try {
+
+
+                    for (int i = 0; i < a.length; i++) {
                         a[i] = dataSnapshot.child("Status/player" + i + "/name").getValue().toString();
                         Log.d("player" + i, a[i]);
                     }
-                    gName=dataSnapshot.child("gameName").getValue().toString();
+                    gName = dataSnapshot.child("gameName").getValue().toString();
 
-                        intent = new Intent(getApplicationContext(), MainActivity.class);
-                        intent.putExtra("createdId", gId);
-                        intent.putExtra("gameName", gName);
-                        intent.putExtra("players", a);
-                        startActivity(intent);
-                        finish();
-                    Log.d("gameName",gName);
-                    } catch (Exception e) {
-                        Toast.makeText(getApplicationContext(), "そのIDの試合は存在しません", Toast.LENGTH_SHORT).show();
-                    }
+                    intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.putExtra("createdId", gId);
+                    intent.putExtra("gameName", gName);
+                    intent.putExtra("players", a);
+                    startActivity(intent);
+                    finish();
+                    Log.d("gameName", gName);
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "そのIDの試合は存在しません", Toast.LENGTH_SHORT).show();
                 }
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
+            }
+        });
 
-            Log.d("before", "intent");
-
-
+        Log.d("before", "intent");
 
 
     }
+
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
-        if(dialog!=null){
+        if (dialog != null) {
             dialog.dismiss();
         }
-        t=null;
+        t = null;
     }
 
 }

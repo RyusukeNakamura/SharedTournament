@@ -9,6 +9,8 @@ android {
         versionCode 2
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+
     }
     buildTypes {
         release {
@@ -21,14 +23,13 @@ android {
 dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
 //    implementation 'com.google.firebase:firebase-database:14.0.0'
-    implementation 'com.google.firebase:firebase-database:11.8.0'
 //    compile 'com.google.firebase:firebase-core:15.0.2'
-    compile 'com.google.firebase:firebase-core:11.8.0'
-    compile 'com.google.firebase:firebase-database:11.8.0'
+    implementation 'com.google.firebase:firebase-core:11.8.0'
+    implementation 'com.google.firebase:firebase-database:11.8.0'
     def supportLibVersion = '27.1.1'
-    compile 'com.android.support:appcompat-v7:' + supportLibVersion
-    compile 'com.android.support:support-v4:' + supportLibVersion
-    compile 'com.android.support:design:' + supportLibVersion
+//    implementation 'com.android.support:appcompat-v7:' + supportLibVersion
+    implementation 'com.android.support:support-v4:' + supportLibVersion
+    implementation 'com.android.support:design:' + supportLibVersion
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'

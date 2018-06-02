@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 
 
 public class UnableWriteFragment extends DialogFragment {
@@ -13,12 +14,13 @@ public class UnableWriteFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
 
-        return builder.setTitle("ログオフしますか？")
+        return builder.setTitle("ログアウトしますか？")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        MainActivity.auth.setText("読み取り専用");
+                        MainActivity.auth.setText("編集不可");
                         MainActivity.logOnOff=0;
+                        Snackbar.make(MainActivity.layout,"ログアウトしました",Snackbar.LENGTH_LONG);
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

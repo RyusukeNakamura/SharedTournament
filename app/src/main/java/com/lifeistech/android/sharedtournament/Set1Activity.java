@@ -69,7 +69,7 @@ public class Set1Activity extends AppCompatActivity implements TextWatcher {
                 }
             }
         });
-        layout = (LinearLayout) findViewById(R.id.layout);
+//        layout = (LinearLayout) findViewById(R.id.layout);
 
     }
 

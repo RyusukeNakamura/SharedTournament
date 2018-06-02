@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,6 +35,8 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 public class MainActivity extends AppCompatActivity {
+    int joinNum = 8;
+
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
@@ -42,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
     static final int requestCodePassword = 0;
 
 
-    ImageView[] imageR1, imageR2;
-    ImageView imageR3, firstWinner, authImage;
+    ImageView[] imageR1, imageR2, imageR3;
+    ImageView firstWinner, authImage;
     GridLayout gridLayout;
     TextView[] textView;
 
@@ -52,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
     List<String> winp;
 
 
-    int[] upSide = {0, 0}, bottomSide = {0, 0};
-    int finalist0 = -1, finalist1 = -1;
+    int[] upSide1 = {0, 0}, bottomSide1 = {0, 0};
+    int[] upSide2 = {0}, bottomSide2 = {0};
     int done1R = -1;
     int done2R = -1;
     int done3R = -1;
@@ -80,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         //一人１トーナメント各自で作れる．あとで新しくつくるとき消すように保存．
 
 
-
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setSubtitle(str);
         actionBar.setIcon(R.drawable.read_only);
@@ -101,14 +103,9 @@ public class MainActivity extends AppCompatActivity {
         gridLayout = (GridLayout) findViewById(R.id.gridLayout);
 
         textView = new TextView[8];
-        textView[0] = (TextView) findViewById(R.id.name1);
-        textView[1] = (TextView) findViewById(R.id.name2);
-        textView[2] = (TextView) findViewById(R.id.name3);
-        textView[3] = (TextView) findViewById(R.id.name4);
-        textView[4] = (TextView) findViewById(R.id.name5);
-        textView[5] = (TextView) findViewById(R.id.name6);
-        textView[6] = (TextView) findViewById(R.id.name7);
-        textView[7] = (TextView) findViewById(R.id.name8);
+        for (int i = 0; i < textView.length; i++) {
+            textView[i] = (TextView) findViewById(getResources().getIdentifier("name" + (i + 1), "id", getPackageName()));
+        }
 
         //BYEは灰色にする
         for (int i = 0; i < textView.length; i++) {
@@ -122,18 +119,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         imageR1 = new ImageView[4];
-        imageR1[0] = (ImageView) findViewById(R.id.r1p12);
-        imageR1[1] = (ImageView) findViewById(R.id.r1p34);
-        imageR1[2] = (ImageView) findViewById(R.id.r1p56);
-        imageR1[3] = (ImageView) findViewById(R.id.r1p78);
+        for (int i = 0; i < imageR1.length; i++) {
+            imageR1[i] = (ImageView) findViewById(getResources().getIdentifier("r1p" + (1 + i), "id", getPackageName()));
+        }
 
         imageR2 = new ImageView[2];
-        imageR2[0] = (ImageView) findViewById(R.id.r2w12);
-        imageR2[1] = (ImageView) findViewById(R.id.r2w34);
+        imageR2[0] = (ImageView) findViewById(R.id.r2w1);
+        imageR2[1] = (ImageView) findViewById(R.id.r2w2);
 
-        imageR3 = (ImageView) findViewById(R.id.r3w12);
+        imageR3 = new ImageView[1];
+        imageR3[0] = (ImageView) findViewById(R.id.r3w1);
         firstWinner = (ImageView) findViewById(R.id.firstWinner);
-
 
 
         r1Winner = new String[4];
@@ -146,113 +142,35 @@ public class MainActivity extends AppCompatActivity {
         try {
             //結果を読み込み
 
+
             ref.child("Round").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (int i = 0; i < imageR1.length; i++) {
-                        //一回戦の結果取得
-                        String w = String.valueOf(dataSnapshot.child("Round1:" + i + "/winner").getValue());
-                        String l = (String) dataSnapshot.child("Round1:" + i + "/loser").getValue();
-                        int upP = parseInt(dataSnapshot.child("Round1:" + i + "/up").getValue().toString());
-                        int downP = parseInt(dataSnapshot.child("Round1:" + i + "/down").getValue().toString());
-                        System.out.println("1Rwinner:" + w + "\n1Rloser:" + l);
+                    renewalResult(dataSnapshot, 1);
+                    renewalResult(dataSnapshot, 2);
+                    renewalResult(dataSnapshot,3);
 
+                    /*String w3 = String.valueOf(dataSnapshot.child("Round3:0/winner").getValue());
+                    String l3 = (String) dataSnapshot.child("Round3:0/loser").getValue();
+                    int upP3 = parseInt(dataSnapshot.child("Round3:0/up").getValue().toString());
+                    int downP3 = parseInt(dataSnapshot.child("Round3:0/down").getValue().toString());
+                    System.out.println("3Rwinner:" + w3 + "\n3Rloser:" + l3);
 
-                        //勝者を格納
-                        if (upP > downP) {
-                            imageR1[i].setBackgroundResource(R.drawable.one_topup);
-                            Log.d("up>down", "imageR1up");
-                            r1Winner[i] = w;
-                            done1R = i;
-                        } else if (upP < downP) {
-                            imageR1[i].setBackgroundResource(R.drawable.one_bottomdown);
-                            Log.d("up<down", "imageR1down");
-                            r1Winner[i] = w;
-                            done1R = i;
-                        }
-                        //imageR2の画像変更, 一回戦完了
-                        if (done1R == i) {
-                            if (i % 2 == 0) {
-                                Log.d("imageR2", "changedTopDone" + i);
-                                imageR2[i / 2].setBackgroundResource(R.drawable.two_top_done);
-                                upSide[i / 2] = 1;
-                            } else {
-                                Log.d("imageR2", "changedBottomDone" + i);
-
-                                imageR2[i / 2].setBackgroundResource(R.drawable.two_bottom_done);
-                                bottomSide[i / 2] = 1;
-                            }
-                            if (bottomSide[i / 2] == 1 && upSide[i / 2] == 1) {
-                                Log.d("一回戦", "両方完了！！！！");
-                                imageR2[i / 2].setBackgroundResource(R.drawable.two_both_done);
-
-                            }
-                        }
+                    //勝者を格納
+                    if (upP3 > downP3) {
+                        imageR3[0].setBackgroundResource(R.drawable.three_topdown);
+                        Log.d("up>down", "r3Winner0" + ":" + w3);
+                        done3R = 0;
+                    } else if (upP3 < downP3) {
+                        imageR3[0].setBackgroundResource(R.drawable.three_bottomup);
+                        Log.d("up<down", "r3Winner0" + ":" + w3);
+                        done3R = 0;
                     }
+                    if (done3R == 0) {
+                        Log.d("imageR3", "firstWinner decided");
+                        firstWinner.setImageResource(R.drawable.red_line);
+                    }*/
 
-                    for (int i = 0; i < imageR2.length; i++) {
-                        //２回戦の結果取得
-                        String w2 = String.valueOf(dataSnapshot.child("Round2:" + i + "/winner").getValue());
-                        String l2 = (String) dataSnapshot.child("Round2:" + i + "/loser").getValue();
-                        int upP2 = parseInt(dataSnapshot.child("Round2:" + i + "/up").getValue().toString());
-                        int downP2 = parseInt(dataSnapshot.child("Round2:" + i + "/down").getValue().toString());
-                        System.out.println("2Rwinner:" + w2 + "\n2Rloser:" + l2 + "\nj=" + i);
-
-
-                        //勝者を格納
-                        if (upP2 > downP2) {
-                            imageR2[i].setBackgroundResource(R.drawable.two_topup);
-                            Log.d("up>down", "r2 Winner" + i + ":" + w2);
-                            r2Winner[i] = w2;
-                            done2R = i;
-                        } else if (upP2 < downP2) {
-                            imageR2[i].setBackgroundResource(R.drawable.two_bottomdown);
-                            Log.d("up<down", "r2 Winner" + i + ":" + w2);
-                            r2Winner[i] = w2;
-                            done2R = i;
-                        }
-                        //imageR3の画像変更, ２回戦完了
-                        if (done2R == i) {
-                            if (i == 0) {
-                                Log.d("imageR3", "changedTopDone");
-                                imageR3.setBackgroundResource(R.drawable.three_top_done);
-                                finalist0 = 1;
-                            } else {
-                                Log.d("imageR3", "changedBottomDone" + i);
-                                imageR3.setBackgroundResource(R.drawable.three_bottom_done);
-                                finalist1 = 1;
-                            }
-                            if (finalist0 == 1 && finalist1 == 1) {
-                                imageR3.setBackgroundResource(R.drawable.three_both_done);
-                            }
-
-                        }
-
-
-                        String w3 = String.valueOf(dataSnapshot.child("Round3:0/winner").getValue());
-                        String l3 = (String) dataSnapshot.child("Round3:0/loser").getValue();
-                        int upP3 = parseInt(dataSnapshot.child("Round3:0/up").getValue().toString());
-                        int downP3 = parseInt(dataSnapshot.child("Round3:0/down").getValue().toString());
-                        System.out.println("3Rwinner:" + w3 + "\n3Rloser:" + l3);
-
-                        //勝者を格納
-                        if (upP3 > downP3) {
-                            imageR3.setBackgroundResource(R.drawable.three_topdown);
-                            Log.d("up>down", "r3Winner0" + ":" + w3);
-                            done3R = 0;
-                        } else if (upP3 < downP3)
-
-                        {
-                            imageR3.setBackgroundResource(R.drawable.three_bottomup);
-                            Log.d("up<down", "r3Winner0" + ":" + w3);
-                            done3R = 0;
-                        }
-                        //imageR3の画像変更, ２回戦完了
-                        if (done3R == 0) {
-                            Log.d("imageR3", "firstWinner decided");
-                            firstWinner.setImageResource(R.drawable.red_line);
-                        }
-                    }
                 }
 
                 @Override
@@ -307,6 +225,98 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void renewalResult(DataSnapshot dataSnapshot, int round) {
+        String r = "Round" + round + ":";
+        ImageView[] imageR = new ImageView[joinNum / round / 2];
+        ImageView[] nextImage = new ImageView[imageR.length / 2];
+        String[] winner = new String[imageR.length];
+        int topWon = 0, bottomWon = 0;
+        int topDone = 0, bottomDone = 0, bothDone = 0, done = -1;
+
+        int[] upSide = new int[imageR.length / 2];
+        int[] bottomSide = new int[imageR.length / 2];
+
+        if (round == 1) {
+            imageR = imageR1;
+            nextImage = imageR2;
+            winner = r1Winner;
+            upSide = upSide1;
+            bottomSide = bottomSide1;
+
+            topWon = R.drawable.one_topup;
+            bottomWon = R.drawable.one_bottomdown;
+
+            topDone = R.drawable.two_top_done;
+            bottomDone = R.drawable.two_bottom_done;
+            bothDone = R.drawable.two_both_done;
+            done = done1R;
+        } else if (round == 2) {
+            imageR = imageR2;
+            nextImage = imageR3;
+            winner = r2Winner;
+            upSide = upSide2;
+            bottomSide = bottomSide2;
+
+            topWon = R.drawable.two_topup;
+            bottomWon = R.drawable.two_bottomdown;
+
+            topDone = R.drawable.three_top_done;
+            bottomDone = R.drawable.three_bottom_done;
+            bothDone = R.drawable.three_both_done;
+            done = done2R;
+        } else if (round == 3) {
+            imageR = imageR3;
+            topWon = R.drawable.three_topup;
+            bottomWon = R.drawable.three_bottomdown;
+            done = done3R;
+        }
+
+        for (int i = 0; i < imageR.length; i++) {
+            //round回戦の結果取得
+            String w = String.valueOf(dataSnapshot.child(r + i + "/winner").getValue());
+            String l = (String) dataSnapshot.child(r + i + "/loser").getValue();
+            int upP = parseInt(dataSnapshot.child(r + i + "/up").getValue().toString());
+            int downP = parseInt(dataSnapshot.child(r + i + "/down").getValue().toString());
+            System.out.println(round + "Rwinner:" + w + "\n" + round + "Rloser:" + l);
+
+
+            //勝者を格納
+            if (upP > downP) {
+                imageR[i].setBackgroundResource(topWon);
+                winner[i] = w;
+                done = i;
+            } else if (upP < downP) {
+                imageR[i].setBackgroundResource(bottomWon);
+                winner[i] = w;
+                done = i;
+            }
+
+            //nextImageRの画像変更, 一回戦完了
+
+            if (done == i) {
+                if (nextImage.length != 0) {
+
+                    if (i % 2 == 0) {
+                        nextImage[i / 2].setBackgroundResource(topDone);
+                        upSide[i / 2] = 1;
+                    } else {
+                        nextImage[i / 2].setBackgroundResource(bottomDone);
+                        bottomSide[i / 2] = 1;
+                    }
+                    if (bottomSide[i / 2] == 1 && upSide[i / 2] == 1) {
+                        nextImage[i / 2].setBackgroundResource(bothDone);
+                    }
+                } else {
+                    Log.d("imageR3", "firstWinner decided");
+                    firstWinner.setImageResource(R.drawable.red_line);
+                }
+            }
+        }
+    }
+
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.option_menu, menu);
@@ -320,13 +330,13 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             //WriteLogIn
             case R.id.logIn:
-                if(logOnOff==0) {
+                if (logOnOff == 0) {
                     DialogFragment dialog = new WritableLogin();
                     Bundle args = new Bundle();
                     args.putString("gameId", str);
                     dialog.setArguments(args);
                     dialog.show(getFragmentManager(), "writable");
-                }else if(logOnOff==1){
+                } else if (logOnOff == 1) {
                     DialogFragment dialog2 = new UnableWriteFragment();
                     dialog2.show(getFragmentManager(), "logOff");
                 }
@@ -349,8 +359,12 @@ public class MainActivity extends AppCompatActivity {
 
                         final MenuItem menuItem = item;
 
-                        menuItem.setIcon(R.drawable.writeread);
-                        logOnOff=1;
+                        if (logOnOff == 0) {
+                            menuItem.setIcon(R.drawable.writeread);
+                        } else {
+                            menuItem.setIcon(R.drawable.read_only);
+                        }
+
                     }
                 });
 
@@ -369,7 +383,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.dispose:
                 finish();
         }
-
 
 
         return true;
@@ -463,10 +476,8 @@ public class MainActivity extends AppCompatActivity {
 
                     args.putInt("imageR3down", j);
                 }
-                Log.d("r1 r2 win", "in for");
 
             }
-
 
             args.putString("upR2winner", r2Winner[0]);
             args.putString("downR2winner", r2Winner[1]);

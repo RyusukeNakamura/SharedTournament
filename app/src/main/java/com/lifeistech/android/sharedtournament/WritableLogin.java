@@ -60,6 +60,7 @@ public class WritableLogin extends DialogFragment {
 
                                 if (wlp.equals(dataSnapshot.child("writePassword").getValue().toString())) {
                                     MainActivity.auth.setText("編集可能");
+                                    MainActivity.logOnOff=1;
                                     Snackbar.make(MainActivity.layout, "編集可能になりました!", Snackbar.LENGTH_LONG).show();
 
                                 } else {
