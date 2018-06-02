@@ -136,41 +136,14 @@ public class MainActivity extends AppCompatActivity {
         r2Winner = new String[2];
 
 
-        //メソッドに統一したい
-
-
         try {
             //結果を読み込み
-
-
             ref.child("Round").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     renewalResult(dataSnapshot, 1);
                     renewalResult(dataSnapshot, 2);
-                    renewalResult(dataSnapshot,3);
-
-                    /*String w3 = String.valueOf(dataSnapshot.child("Round3:0/winner").getValue());
-                    String l3 = (String) dataSnapshot.child("Round3:0/loser").getValue();
-                    int upP3 = parseInt(dataSnapshot.child("Round3:0/up").getValue().toString());
-                    int downP3 = parseInt(dataSnapshot.child("Round3:0/down").getValue().toString());
-                    System.out.println("3Rwinner:" + w3 + "\n3Rloser:" + l3);
-
-                    //勝者を格納
-                    if (upP3 > downP3) {
-                        imageR3[0].setBackgroundResource(R.drawable.three_topdown);
-                        Log.d("up>down", "r3Winner0" + ":" + w3);
-                        done3R = 0;
-                    } else if (upP3 < downP3) {
-                        imageR3[0].setBackgroundResource(R.drawable.three_bottomup);
-                        Log.d("up<down", "r3Winner0" + ":" + w3);
-                        done3R = 0;
-                    }
-                    if (done3R == 0) {
-                        Log.d("imageR3", "firstWinner decided");
-                        firstWinner.setImageResource(R.drawable.red_line);
-                    }*/
-
+                    renewalResult(dataSnapshot, 3);
                 }
 
                 @Override
@@ -182,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
             ref.child("Status").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-
 
                     for (int i = 0; i < players.length; i++) {
                         if (players[i].equals(dataSnapshot.child("player" + i + "/name").getValue().toString())) {
@@ -204,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     winp = new ArrayList<String>();
-
                     for (int i = 0; i < players.length; i++) {
                         int n = Integer.parseInt(dataSnapshot.child("player" + i + "/winPoint").getValue().toString());
                         winp.add("ベスト " + (int) (players.length / (Math.pow(2, n))) + "       " + players[i]);
@@ -227,21 +198,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void renewalResult(DataSnapshot dataSnapshot, int round) {
         String r = "Round" + round + ":";
-        ImageView[] imageR = new ImageView[joinNum / round / 2];
+        ImageView[] imageR = new ImageView[joinNum / (int) Math.pow(2, round)];
         ImageView[] nextImage = new ImageView[imageR.length / 2];
         String[] winner = new String[imageR.length];
         int topWon = 0, bottomWon = 0;
         int topDone = 0, bottomDone = 0, bothDone = 0, done = -1;
+        int[] upSide = new int[imageR.length / 2],bottomSide = new int[imageR.length / 2];
 
-        int[] upSide = new int[imageR.length / 2];
-        int[] bottomSide = new int[imageR.length / 2];
-
+        //round回戦
         if (round == 1) {
             imageR = imageR1;
             nextImage = imageR2;
             winner = r1Winner;
-            upSide = upSide1;
-            bottomSide = bottomSide1;
+            upSide = upSide1;bottomSide = bottomSide1;
 
             topWon = R.drawable.one_topup;
             bottomWon = R.drawable.one_bottomdown;
@@ -254,8 +223,7 @@ public class MainActivity extends AppCompatActivity {
             imageR = imageR2;
             nextImage = imageR3;
             winner = r2Winner;
-            upSide = upSide2;
-            bottomSide = bottomSide2;
+            upSide = upSide2;bottomSide = bottomSide2;
 
             topWon = R.drawable.two_topup;
             bottomWon = R.drawable.two_bottomdown;
@@ -277,8 +245,6 @@ public class MainActivity extends AppCompatActivity {
             String l = (String) dataSnapshot.child(r + i + "/loser").getValue();
             int upP = parseInt(dataSnapshot.child(r + i + "/up").getValue().toString());
             int downP = parseInt(dataSnapshot.child(r + i + "/down").getValue().toString());
-            System.out.println(round + "Rwinner:" + w + "\n" + round + "Rloser:" + l);
-
 
             //勝者を格納
             if (upP > downP) {
@@ -291,8 +257,7 @@ public class MainActivity extends AppCompatActivity {
                 done = i;
             }
 
-            //nextImageRの画像変更, 一回戦完了
-
+            //nextImageRの画像変更, round回戦完了
             if (done == i) {
                 if (nextImage.length != 0) {
 
@@ -307,14 +272,11 @@ public class MainActivity extends AppCompatActivity {
                         nextImage[i / 2].setBackgroundResource(bothDone);
                     }
                 } else {
-                    Log.d("imageR3", "firstWinner decided");
                     firstWinner.setImageResource(R.drawable.red_line);
                 }
             }
         }
     }
-
-
 
 
     @Override
@@ -357,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
                     public void afterTextChanged(Editable s) {
 
 
-                        final MenuItem menuItem = item;
+                        MenuItem menuItem = item;
 
                         if (logOnOff == 0) {
                             menuItem.setIcon(R.drawable.writeread);
@@ -389,105 +351,61 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //一回戦
-    public void round1(View v) {
-
-        DialogFragment dialog = new RoundDialogFragment();
-        Bundle args = new Bundle();
-        args.putString("userId", str);
-        args.putString("editable", auth.getText().toString());
-
-
-        for (int i = 0; i < imageR1.length; i++) {
-
-
-            //クリックしたブロックを判別
-            if (v == imageR1[i]) {
-
-                args.putInt("id", i);
-                args.putString("upPlayer", players[2 * i]);
-                args.putString("downPlayer", players[2 * i + 1]);
-                dialog.setArguments(args);
-                dialog.show(getFragmentManager(), "round");
-                break;
-            }
+    public void round(View v, int round) {
+        ImageView[] imageR = new ImageView[joinNum / (int) Math.pow(2, round)];
+        String[] previousWinner = new String[imageR.length * 2];
+        if (round == 1) {
+            imageR = imageR1;
+            previousWinner = players;
+        } else if (round == 2) {
+            imageR = imageR2;
+            previousWinner = r1Winner;
+        } else if (round == 3) {
+            imageR = imageR3;
+            previousWinner = r2Winner;
         }
-    }
-
-    //２回戦
-    public void round2(View v) {
         DialogFragment dialog = new RoundDialogFragment();
         Bundle args = new Bundle();
         args.putString("userId", str);
         args.putString("editable", auth.getText().toString());
 
-
-        for (int i = 0; i < imageR2.length; i++) {
-            if (v == imageR2[i]) {
-                System.out.println("r1Winner=" + r1Winner[2 * i]);
-                if (r1Winner[2 * i] != null && r1Winner[2 * i + 1] != null) {
-
+        for (int i = 0; i < imageR.length; i++) {
+            if (v == imageR[i]) {
+                System.out.println("Winner=" + previousWinner[2 * i]);
+                if (previousWinner[2 * i] != null && previousWinner[2 * i + 1] != null) {
                     args.putInt("id", i);
-
-
                     //上から何番目か
                     for (int j = 0; j < players.length; j++) {
-                        //一度閉じてログインした後，==にすればifに引っかからなくなる．教訓
-                        if (r1Winner[2 * i].equals(players[j])) {
-                            args.putInt("imageR2up", j);
+                        if (previousWinner[2 * i].equals(players[j])) {
+                            args.putInt(round + "rUpImage", j);
                         }
-                        if (r1Winner[2 * i + 1].equals(players[j])) {
-                            args.putInt("imageR2down", j);
+                        if (previousWinner[2 * i + 1].equals(players[j])) {
+                            args.putInt(round + "rDownImage", j);
                         }
                     }
-
-
-                    args.putString("upR1winner", r1Winner[2 * i]);
-                    args.putString("downR1winner", r1Winner[2 * i + 1]);
+                    args.putString((round - 1) + "rUpWinner", previousWinner[2 * i]);
+                    args.putString((round - 1) + "rDownWinner", previousWinner[2 * i + 1]);
                     dialog.setArguments(args);
                     dialog.show(getFragmentManager(), "round");
                 } else {
-                    System.out.println("r1Winnerが空です");
-                    Toast.makeText(getApplicationContext(), "下位の勝敗を決めて下さい", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), (round - 1) + "回戦の勝敗を決めて下さい", Toast.LENGTH_LONG).show();
                 }
                 break;
             }
         }
+
     }
 
-    //３回戦
+    public void round1(View v) {
+        round(v, 1);
+    }
+
+    public void round2(View v) {
+        round(v, 2);
+    }
+
     public void round3(View v) {
-        DialogFragment dialog = new RoundDialogFragment();
-        Bundle args = new Bundle();
-        args.putString("userId", str);
-        args.putString("editable", auth.getText().toString());
-
-
-        System.out.println("firstWinner=");
-        if (r2Winner[0] != null && r2Winner[1] != null) {
-
-            for (int j = 0; j < players.length; j++) {
-                if (r2Winner[0].equals(players[j])) {
-                    Log.d("r1 r2 0win", "r1=" + r1Winner[0] + "r2=" + r2Winner[0]);
-                    args.putInt("imageR3up", j);
-                }
-                if (r2Winner[1].equals(players[j])) {
-                    Log.d("r1 r2 1win", "r1=" + r1Winner[1] + "r2=" + r2Winner[1]);
-
-                    args.putInt("imageR3down", j);
-                }
-
-            }
-
-            args.putString("upR2winner", r2Winner[0]);
-            args.putString("downR2winner", r2Winner[1]);
-            dialog.setArguments(args);
-            dialog.show(getFragmentManager(), "round");
-            Log.d("dialog", "inMain");
-        } else {
-            Toast.makeText(getApplicationContext(), "下位の勝敗を決めて下さい", Toast.LENGTH_LONG).show();
-        }
-
+        round(v, 3);
     }
 
     @Override

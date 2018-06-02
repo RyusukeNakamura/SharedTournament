@@ -26,7 +26,7 @@ public class RoundDialogFragment extends DialogFragment {
     EditText upScore, downScore, memo;
     int id, idU, idD;
     int round = 0;
-    String userId, upP, downP,editable;
+    String userId, upP, downP, editable;
     String title;
     DatabaseReference refP;
     DatabaseReference refRound;
@@ -47,205 +47,31 @@ public class RoundDialogFragment extends DialogFragment {
         memo = (EditText) layout.findViewById(R.id.memo);
 
         id = getArguments().getInt("id");
-        Log.d("getArguments", "id=" + id);
-
-        System.out.println("r1:" + getArguments().getString("upPlayer") + getArguments().getString("downPlayer"));
-        System.out.println("r2:" + getArguments().getString("downR1winner") + getArguments().getString("upR1winner"));
-        System.out.println("r3:" + getArguments().getString("downR2winner") + getArguments().getString("upR2winner"));
-
         userId = getArguments().getString("userId");
-        Log.d("userId", userId);
-        editable=getArguments().getString("editable");
+        editable = getArguments().getString("editable");
 
 
         //書き込み権限
-        if(editable.equals("編集可能")){
+        if (editable.equals("編集可能")) {
             upScore.setEnabled(true);
             downScore.setEnabled(true);
             memo.setEnabled(true);
-            Log.d("auth","writable");
-        }else{
+            Log.d("auth", "writable");
+        } else {
             upScore.setEnabled(false);
             downScore.setEnabled(false);
             memo.setEnabled(false);
-            Log.d("auth","disabled");
+            Log.d("auth", "disabled");
         }
 
 
         //EditTextで前回入力した値を取得
-        refP = database.getReference(userId + "/Status");
-        refRound = database.getReference(userId + "/Round");
-
-        Log.d("afterRefP,refRound", userId);
-
-        //１回戦のダイアログ---------------------------------------------------------------------------
-        if (getArguments().getString("upPlayer") != null) {
-            upP = getArguments().getString("upPlayer");
-            downP = getArguments().getString("downPlayer");
-            upPlayer.setText(upP);
-            downPlayer.setText(downP);
-
-            if(upP.indexOf("BYE")!=-1){
-                upScore.setEnabled(false);
-            }
-            if(downP.indexOf("BYE")!=-1){
-                downScore.setEnabled(false);
-            }
-
-
-            idU = 2 * id;
-            idD = 2 * id + 1;
-
-            Log.d("1R idU,idD", idU + "," + idD);
-
-
-            //playerStatus
-            refP.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (Integer.parseInt(dataSnapshot.child("player" + idU).child("r1point").getValue().toString()) != 0) {
-                        upScore.setText(dataSnapshot.child("player" + idU).child("r1point").getValue().toString());
-                    }
-                    if (Integer.parseInt(dataSnapshot.child("player" + idD).child("r1point").getValue().toString()) != 0) {
-                        downScore.setText(dataSnapshot.child("player" + idD).child("r1point").getValue().toString());
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-
-            //RoundResultが変化したときの取得
-            refRound.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    //   Log.d("memo", dataSnapshot.child("Round1:" + id).child("memo").getValue().toString() + "1Rmemo");
-                    if (dataSnapshot.child("Round1:" + id).child("memo").getValue().toString() != null) {
-                        memo.setText(dataSnapshot.child("Round1:" + id).child("memo").getValue().toString());
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-            round = 1;
-            title = "１回戦";
-
-        } else if (getArguments().getString("upR1winner") != null) {
-
-            //2回戦のダイアログ----------------------------------------------------------------------
-
-            upP = getArguments().getString("upR1winner");
-            downP = getArguments().getString("downR1winner");
-            upPlayer.setText(upP);
-            downPlayer.setText(downP);
-
-            idU = getArguments().getInt("imageR2up");
-            idD = getArguments().getInt("imageR2down");
-
-            Log.d("2R idU,idD", idU + "," + idD);
-
-
-            //playerStatus
-            refP.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (Integer.parseInt(dataSnapshot.child("player" + idU).child("r2point").getValue().toString()) != 0) {
-                        upScore.setText(dataSnapshot.child("player" + idU).child("r2point").getValue().toString());
-                    }
-                    if (Integer.parseInt(dataSnapshot.child("player" + idU).child("r2point").getValue().toString()) != 0) {
-                        downScore.setText(dataSnapshot.child("player" + idD).child("r2point").getValue().toString());
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-
-            //RoundResultが変化したときの取得
-            refRound.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    //  Log.d("memo", dataSnapshot.child("Round2:" + id).child("memo").getValue().toString() + "2Rmemo");
-                    if (dataSnapshot.child("Round2:" + id).child("memo").getValue().toString() != null) {
-                        memo.setText(dataSnapshot.child("Round2:" + id).child("memo").getValue().toString());
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-            round = 2;
-            title = "準決勝";
-        } else if (getArguments().getString("upR2winner") != null) {
-
-            Log.d("決勝", "dialog");
-
-            upP = getArguments().getString("upR2winner");
-            downP = getArguments().getString("downR2winner");
-            upPlayer.setText(upP);
-            downPlayer.setText(downP);
-
-            idU = getArguments().getInt("imageR3up");
-            idD = getArguments().getInt("imageR3down");
-            Log.d("3R idU,idD", idU + "," + idD);
-
-
-            //playerStatus
-            refP.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (Integer.parseInt(dataSnapshot.child("player" + idU).child("r3point").getValue().toString()) != 0) {
-                        upScore.setText(dataSnapshot.child("player" + idU).child("r3point").getValue().toString());
-                    }
-                    if (Integer.parseInt(dataSnapshot.child("player" + idU).child("r3point").getValue().toString()) != 0) {
-                        downScore.setText(dataSnapshot.child("player" + idD).child("r3point").getValue().toString());
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-
-            //RoundResultが変化したときの取得
-            refRound.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.d("memo", dataSnapshot.child("Round3:0").child("memo").getValue().toString() + "3Rmemo");
-                    if (dataSnapshot.child("Round3:0").child("memo").getValue().toString() != null) {
-                        memo.setText(dataSnapshot.child("Round3:0").child("memo").getValue().toString());
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-            round = 3;
-            title = "決勝戦";
-        }
-        System.out.println("ID=" + id);
-
+        getPrevious(1);
+        getPrevious(2);
+        getPrevious(3);
 
         //ダイアログを生成
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        System.out.println("Dialog created.");
-
 
         //ダイアログの設定---------------------------------------------------------------------------
         return builder.setTitle(title)
@@ -257,83 +83,39 @@ public class RoundDialogFragment extends DialogFragment {
                             //2スコア
                             int uScore = Integer.parseInt(upScore.getText().toString());
                             int dScore = Integer.parseInt(downScore.getText().toString());
-                            System.out.println("uScore=" + uScore + "\ndScore=" + dScore);
-
 
                             //2選手名とメモの取得
                             String uu = upPlayer.getText().toString();
                             String dd = downPlayer.getText().toString();
                             String mm = memo.getText().toString();
 
-                            Log.d("uu+dd+memo", uu + dd + mm);
-
                             //一回戦, ２選手のスコアを格納
-
                             Map<String, Object> uSender = new HashMap<>();
                             Map<String, Object> dSender = new HashMap<>();
-
-
-                            if (round == 1) {
-
-                                uSender.put("r1point", uScore);
-                                uSender.put("r2point", 0);
-                                uSender.put("r3point", 0);
-
-                                dSender.put("r1point", dScore);
-                                dSender.put("r2point", 0);
-                                dSender.put("r3point", 0);
-
-                                refRound = database.getReference(userId + "/Round/Round1:" + id);
-                                Log.d("refRound 1R", "id=" + id);
-                            }
-                            //2回戦. ２選手のスコアを格納child
-                            else if (round == 2) {
-                                System.out.println(uu + "---" + dd);
-
-
-                                uSender.put("r2point", uScore);
-                                uSender.put("r3point", 0);
-
-                                dSender.put("r2point", dScore);
-                                dSender.put("r3point", 0);
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                refRound = database.getReference(userId + "/Round/Round2:" + id);
-                            } else {
-                                System.out.println(uu + "---" + dd);
-
-                                uSender.put("r3point", uScore);
-                                dSender.put("r3point", dScore);
-
-                                refRound = database.getReference(userId + "/Round/Round3:0");
-                            }
-
+                            uSender.put("r" + round + "point", uScore);
+                            dSender.put("r" + round + "point", dScore);
+                            refRound = database.getReference(userId + "/Round/Round" + round + ":" + id);
 
                             //RoundResultに結果を格納
                             if (uScore > dScore) {
                                 Snackbar.make(MainActivity.layout, uu + " won", Snackbar.LENGTH_LONG).show();
-
                                 //勝った回数＝round数
-                                uSender.put("winPoint",round);
+                                uSender.put("winPoint", round);
                                 refP.child("player" + idU).updateChildren(uSender);
                                 //負けたらround-1
-                                dSender.put("winPoint",round-1);
-                                refP.child("player"+idD).updateChildren(dSender);
-
-
+                                dSender.put("winPoint", round - 1);
+                                refP.child("player" + idD).updateChildren(dSender);
                                 RoundResult R = new RoundResult(uScore, dScore, uu, dd, mm);
                                 refRound.setValue(R);
-
-
                             } else if (uScore < dScore) {
                                 Snackbar.make(MainActivity.layout, dd + " won", Snackbar.LENGTH_LONG).show();
 
                                 //負けround-1
-                                uSender.put("winPoint",round-1);
+                                uSender.put("winPoint", round - 1);
                                 refP.child("player" + idU).updateChildren(uSender);
                                 //勝った回数＝round数
-                                dSender.put("winPoint",round);
-                                refP.child("player"+idD).updateChildren(dSender);
+                                dSender.put("winPoint", round);
+                                refP.child("player" + idD).updateChildren(dSender);
 
                                 RoundResult R = new RoundResult(uScore, dScore, dd, uu, mm);
                                 refRound.setValue(R);
@@ -350,5 +132,62 @@ public class RoundDialogFragment extends DialogFragment {
                 .setView(layout)
                 .create();
 
+    }
+
+    public void getPrevious(final int r) {
+        refP = database.getReference(userId + "/Status");
+        refRound=database.getReference(userId+"/Round");
+
+        if (getArguments().getString((r - 1) + "rUpWinner") != null) {
+            upP = getArguments().getString((r - 1) + "rUpWinner");
+            downP = getArguments().getString((r - 1) + "rDownWinner");
+            upPlayer.setText(upP);
+            downPlayer.setText(downP);
+
+            if (upP.indexOf("BYE") != -1) {
+                upScore.setEnabled(false);
+            }
+            if (downP.indexOf("BYE") != -1) {
+                downScore.setEnabled(false);
+            }
+
+            idU = getArguments().getInt(r + "rUpImage");
+            idD = getArguments().getInt(r + "rDownImage");
+
+            //playerStatus
+            refP.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (Integer.parseInt(dataSnapshot.child("player" + idU).child("r" + r + "point").getValue().toString()) != 0) {
+                        upScore.setText(dataSnapshot.child("player" + idU).child("r" + r + "point").getValue().toString());
+                    }
+                    if (Integer.parseInt(dataSnapshot.child("player" + idD).child("r" + r + "point").getValue().toString()) != 0) {
+                        downScore.setText(dataSnapshot.child("player" + idD).child("r" + r + "point").getValue().toString());
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            //RoundResultが変化したときの取得
+            refRound.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.child("Round" + r + ":" + id).child("memo").getValue().toString() != null) {
+                        memo.setText(dataSnapshot.child("Round" + r + ":" + id).child("memo").getValue().toString());
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            round = r;
+            title = r + "回戦";
+        }
     }
 }
