@@ -20,7 +20,6 @@ public class UnableWriteFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         MainActivity.auth.setText("編集不可");
                         MainActivity.logOnOff=0;
-                        Snackbar.make(MainActivity.layout,"ログアウトしました",Snackbar.LENGTH_LONG);
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

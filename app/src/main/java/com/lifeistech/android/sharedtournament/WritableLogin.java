@@ -1,16 +1,19 @@
 package com.lifeistech.android.sharedtournament;
 
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,6 +48,12 @@ public class WritableLogin extends DialogFragment {
 
         return builder.setTitle("結果編集ログイン")
                 .setMessage("パスワードを入力して下さい")
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -61,12 +70,9 @@ public class WritableLogin extends DialogFragment {
                                 if (wlp.equals(dataSnapshot.child("writePassword").getValue().toString())) {
                                     MainActivity.auth.setText("編集可能");
                                     MainActivity.logOnOff=1;
-                                    Snackbar.make(MainActivity.layout, "編集可能になりました!", Snackbar.LENGTH_LONG).show();
 
                                 } else {
                                     Log.d("login", "failed");
-                                    Snackbar.make(MainActivity.layout, "パスワードが違います", Snackbar.LENGTH_LONG).show();
-
 
                                 }
                             }
@@ -76,6 +82,7 @@ public class WritableLogin extends DialogFragment {
 
                             }
                         });
+
 
                     }
                 })

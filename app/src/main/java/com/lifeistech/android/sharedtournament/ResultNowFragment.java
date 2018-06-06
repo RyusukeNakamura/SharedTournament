@@ -39,7 +39,7 @@ public class ResultNowFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        return builder.setTitle("試合進捗状況")
+        return builder.setTitle("現在のランキング")
                 .setItems(s, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

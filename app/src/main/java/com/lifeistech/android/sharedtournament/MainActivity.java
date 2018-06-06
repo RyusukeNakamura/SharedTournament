@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         auth = (TextView) findViewById(R.id.auth);
+
 
         layout = (LinearLayout) findViewById(R.id.linearLayout);
         Intent intent = getIntent();
@@ -134,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
         r1Winner = new String[4];
         r2Winner = new String[2];
+
 
 
         try {
@@ -203,14 +206,15 @@ public class MainActivity extends AppCompatActivity {
         String[] winner = new String[imageR.length];
         int topWon = 0, bottomWon = 0;
         int topDone = 0, bottomDone = 0, bothDone = 0, done = -1;
-        int[] upSide = new int[imageR.length / 2],bottomSide = new int[imageR.length / 2];
+        int[] upSide = new int[imageR.length / 2], bottomSide = new int[imageR.length / 2];
 
         //round回戦
         if (round == 1) {
             imageR = imageR1;
             nextImage = imageR2;
             winner = r1Winner;
-            upSide = upSide1;bottomSide = bottomSide1;
+            upSide = upSide1;
+            bottomSide = bottomSide1;
 
             topWon = R.drawable.one_topup;
             bottomWon = R.drawable.one_bottomdown;
@@ -223,7 +227,8 @@ public class MainActivity extends AppCompatActivity {
             imageR = imageR2;
             nextImage = imageR3;
             winner = r2Winner;
-            upSide = upSide2;bottomSide = bottomSide2;
+            upSide = upSide2;
+            bottomSide = bottomSide2;
 
             topWon = R.drawable.two_topup;
             bottomWon = R.drawable.two_bottomdown;
@@ -303,6 +308,7 @@ public class MainActivity extends AppCompatActivity {
                     dialog2.show(getFragmentManager(), "logOff");
                 }
 
+
                 auth.addTextChangedListener(new TextWatcher() {
 
                     @Override
@@ -317,14 +323,16 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-
-
                         MenuItem menuItem = item;
 
-                        if (logOnOff == 0) {
+                        if (auth.getText().toString().equals("編集可能")) {
                             menuItem.setIcon(R.drawable.writeread);
+                            Toast.makeText(getApplicationContext(), "編集可能になりました", Toast.LENGTH_SHORT).show();
+
                         } else {
                             menuItem.setIcon(R.drawable.read_only);
+                            Toast.makeText(getApplicationContext(),"ログアウトしました",Toast.LENGTH_SHORT).show();
+
                         }
 
                     }
@@ -387,6 +395,7 @@ public class MainActivity extends AppCompatActivity {
                     args.putString((round - 1) + "rDownWinner", previousWinner[2 * i + 1]);
                     dialog.setArguments(args);
                     dialog.show(getFragmentManager(), "round");
+
                 } else {
                     Toast.makeText(getApplicationContext(), (round - 1) + "回戦の勝敗を決めて下さい", Toast.LENGTH_LONG).show();
                 }
